@@ -20,3 +20,6 @@ libhll.a: hll.o
 clean:
 	-rm -f demo libhll.a *~ .*~
 
+.PHONY:
+count:
+	wc -l *.h *.cc
