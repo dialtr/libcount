@@ -1,0 +1,11 @@
+# Ignore build targets
+demo
+libhll.a
+
+# Ignore object files
+*.o
+
+# Ignore editor temporary files
+*~
+.*~
+
