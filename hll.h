@@ -12,7 +12,7 @@ struct HLL_CTX;
 // The 'precision' argument is an integer in the range [4..16] inclusive
 // that governs the number of buckets to use in the stochastic averaging
 // algorithm that is used to improve estimates.
-HLL_CTX* HLL_init(uint64_t precision);
+HLL_CTX* HLL_init(int precision);
 
 // Update the counter with an element from the set.
 int HLL_update(HLL_CTX*, uint64_t element_hash);
