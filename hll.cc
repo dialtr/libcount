@@ -17,6 +17,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <string.h>
+#include "bitwise_ops.h"
 #include "hll_debug.h"
 
 namespace {
@@ -87,6 +88,34 @@ void HLL_debug_print(FILE* file, HLL_CTX* ctx) {
 }
 
 int HLL_test(FILE* file) {
+  //
+  // Tests for bitwise_ops.h/.cc
+  //
+
+  // Mask of all 1's should return zero.
+  uint64_t kNoLeadingZeroes = 0xffffffffffffffff;
+  uint64_t test = nlz64(kNoLeadingZeroes);
+  if (test != 0) {
+    fprintf(file, "nlz64(): should return 0 when passed bitset of all 1's\n");
+    return -1;
+  }
+
+  // Test several known values of leading zeroes.
+  for (int i = 0; i < 64; ++i) {
+    const uint64_t kTestMask = (1 << i);
+    const uint64_t kExpectedLeadingZeroes = (64 - i - 1);
+    const uint64_t actual = nlz64(kTestMask);
+    if (actual != kExpectedLeadingZeroes) {
+      fprintf(file, "nlz64(): expected %llu leading zeroes, counted %llu\n",
+        kExpectedLeadingZeroes, actual);
+      return -1;
+    }
+  }
+
+  //
+  // Tests for libhll
+  //
+
   HLL_CTX* ctx = NULL;
 
   // Should fail to create context with precision value that is too low.

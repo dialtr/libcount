@@ -9,8 +9,8 @@ all: demo libhll.a
 demo: demo.o libhll.a
 	$(CC) -o demo demo.o libhll.a
 
-libhll.a: hll.o
-	$(AR) rcs libhll.a hll.o
+libhll.a: bitwise_ops.o hll.o
+	$(AR) rcs libhll.a bitwise_ops.o hll.o
 	$(RANLIB) libhll.a
 
 .cc.o:
