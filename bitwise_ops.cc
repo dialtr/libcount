@@ -15,7 +15,6 @@
 
 #include "bitwise_ops.h"
 
-/*
 uint64_t nlz64(uint64_t x) {
   uint64_t y = 0;
   uint64_t n = 64;
@@ -26,34 +25,5 @@ uint64_t nlz64(uint64_t x) {
   y = x >>  2; if (y != 0) { n = n - 2;  x = y; }
   y = x >>  1; if (y != 0) return n - 2;
   return n - x;
-}
-*/
-
-/*
-uint64_t nlz64(uint64_t x) {
-  uint64_t count = 0;
-  for (int i = 0; i < 64; ++i) {
-    const int shift = 64 - i - 1;
-    const uint64_t mask = (1 << shift);
-    if (mask & x) {
-      break;
-    }
-    ++count;
-  }
-  return count;
-}
-*/
-
-uint64_t nlz64(uint64_t x) {
-  uint64_t count = 0;
-  uint64_t mask = (1 << 63);
-  while (mask) {
-    if (mask & x) {
-      break;
-    }
-    ++count;
-    mask >>= 1;
-  }
-  return count;
 }
 

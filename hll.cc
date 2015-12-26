@@ -102,7 +102,8 @@ int HLL_test(FILE* file) {
 
   // Test several known values of leading zeroes.
   for (int i = 0; i < 64; ++i) {
-    const uint64_t kTestMask = (1 << i);
+    const uint64_t kOne = 1;
+    const uint64_t kTestMask = (kOne << i);
     const uint64_t kExpectedLeadingZeroes = (64 - i - 1);
     const uint64_t actual = nlz64(kTestMask);
     if (actual != kExpectedLeadingZeroes) {
