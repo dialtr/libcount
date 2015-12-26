@@ -18,7 +18,7 @@ libhll.a: hll.o
 
 .PHONY:
 clean:
-	-rm -f demo libhll.a *~ .*~
+	-rm -f demo *.o libhll.a *~ .*~
 
 .PHONY:
 count:
