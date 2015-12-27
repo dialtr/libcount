@@ -168,7 +168,7 @@ double HLL_raw_estimate(const HLL_CTX* ctx) {
   }
 
   // Calculate the harmonic mean
-  const double harmonic_mean = m * sum;
+  const double harmonic_mean = m * (1.0f / sum);
 
   // Calculate the scale factor
   // TODO(tdial): This could be calculated at initialization time.
