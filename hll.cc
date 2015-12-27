@@ -32,6 +32,8 @@ extern "C" {
 struct HLL_CTX {
   int      precision;
   uint64_t updates;
+  uint64_t zero_count_mask;
+  uint64_t register_index_shift;
   uint64_t register_count;
   uint64_t registers[1];
 };
@@ -45,11 +47,11 @@ HLL_CTX* HLL_init(int precision) {
   }
 
   // Determine how much memory to allocate. This varies based on the precision
-  // since we must have (2 ^ precision) registers available for the stocastic
+  // since we must have (2 ^ precision) registers available for the stochastic
   // averaging algorithm. We therefore allocate space for the structure itself
   // as well as 2 ^ precision registers, subtracting one register because the
   // layout of HLL_CTX already provides space for one.
-  uint64_t registers = 1 << precision;
+  const uint64_t registers = ((uint64_t)1) << precision;
   const size_t size = sizeof(HLL_CTX) + ((registers - 1) * sizeof(uint64_t));
 
   // Allocate the memory. If malloc() returns NULL, that's a pretty serious
@@ -60,17 +62,64 @@ HLL_CTX* HLL_init(int precision) {
     return NULL;
   }
 
-  // Initialize the context structure's members.
+  // Initialize the context structure
   memset(context, 0, size);
+
+  // Store the precision in the context.
   context->precision = precision;
+
+  // Compute a mask to mask off the leading 'precision' bits in order to
+  // facilitate the leading zero count. Since AND'ing the element hash with
+  // this mask will zero out 'precision' bits, to calculate the true number
+  // of leading zeroes after those bits, we'll need to subtract 'precision'
+  // from that count. 
+  // TODO(tdial): Test this.
+  context->zero_count_mask = 
+    ~(((((uint64_t)1) << precision) - 1) << (64 - precision));
+
+  // Compute the number of places to shift a hash right to get register index.
+  // TODO(tdial): Test this.
+  context->register_index_shift = 64 - precision;
+
+  // Store the number of registers implied by 'precision'.
   context->register_count = registers;
 
   return context;
 }
 
-int HLL_update(HLL_CTX*, uint64_t element_hash) {
-  // TODO: Implement
-  return -1;
+int HLL_update(HLL_CTX* ctx, uint64_t element_hash) {
+  assert(ctx != NULL);
+  if (ctx == NULL) {
+    errno = EINVAL;
+    return -1;
+  }
+ 
+  // Per the explanation in the HyperLogLog paper, the incoming stream of
+  // element hashes is divided into logical substreams by hashing the first
+  // 'precision' bits of the hash. For each logical substream, we will store
+  // the maximum number of leading zeroes found in the following bits of the
+  // hash, plus one.
+  const uint64_t substream_index = element_hash >> ctx->register_index_shift;
+  
+  // Using the bits that remain after discarding the first 'precision' bits
+  // for the substream index, find the number of leading zeroes, plus one.
+  // This is done by first masking off the leading 'precision' bits to zero,
+  // and performing the zero count. Next, we subtract 'precision' from the
+  // count since by definition, they were included as part of the mask.
+  // Finally, add one, since the algorithm requires that we store the number
+  // of leading zeroes, plus one, in the register.
+  const uint64_t zeroes =
+    nlz64(element_hash & ctx->zero_count_mask) - ctx->precision + 1;
+
+  // Did we find a new max zero count in the associated register?
+  if (zeroes > ctx->registers[substream_index]) {
+    ctx->registers[substream_index] = zeroes;
+  }
+
+  // Track the number of calls made to the HLL_update() function.
+  ++ctx->updates;
+ 
+  return 0;
 }
 
 int HLL_cardinality(const HLL_CTX* ctx, uint64_t* cardinality) {
@@ -84,7 +133,13 @@ void HLL_free(HLL_CTX* ctx) {
 }
 
 void HLL_debug_print(FILE* file, HLL_CTX* ctx) {
-  // TODO: Implement
+  assert(file != NULL);
+  assert(ctx != NULL);
+  fprintf(file, "precision:            %d\n", ctx->precision);
+  fprintf(file, "updates:              %llu\n", ctx->updates);
+  fprintf(file, "zero_count_mask:      %p\n", (void*)ctx->zero_count_mask);
+  fprintf(file, "register_index_shift: %llu\n", ctx->register_index_shift);
+  fprintf(file, "register_count:       %llu\n", ctx->register_count);
 }
 
 int HLL_test(FILE* file) {
@@ -138,7 +193,7 @@ int HLL_test(FILE* file) {
   }
 
   // Should succeed with precision value that is in range.
-  const int kPrecision = 8;
+  const int kPrecision = 10;
   ctx = HLL_init(kPrecision);
   if (ctx == NULL) {
     fprintf(file, "HLL_init(): Should succeed with precision value of %d\n",
@@ -181,6 +236,36 @@ int HLL_test(FILE* file) {
         r, ctx->registers[r]);
       return -1;
     }
+  }
+
+  // Test the update function.
+  int status = HLL_update(ctx, 1);
+  if (status != 0) {
+    fprintf(file, "HLL_update(): Call returned status %d, expected 0\n",
+      status);
+    return -1;
+  }
+
+  // We should have recorded a single call to update()
+  if (ctx->updates != 1) {
+    fprintf(file, "HLL_update(): ctx->updates should be 1\n");
+    return -1;
+  }
+
+  // We expect register 0 to contain a particular number of leading zeroes.
+  // The expected value should be the number of leading zeroes, plus one.
+  // Thus, for a precision of kPrecision, we expect the actual leading 
+  // zero count to be (64 - kPrecision - 1) because the first kPrecision bits
+  // are used for the substream index. We subtract one due to the existence
+  // of a single 1 bit in the lowest position, and we add one back because
+  // the algorithm always stores the number of leading zeroes plus one in
+  // a given register.
+  const uint64_t kExpectedLeadingZeroes = (64 - kPrecision - 1) + 1;
+  const uint64_t kActualLeadingZeroes = ctx->registers[0];
+  if (kExpectedLeadingZeroes != kActualLeadingZeroes) {
+    fprintf(file, "HLL_update(): expected register 0 to hold value of %llu"
+     " but found %llu\n", kExpectedLeadingZeroes, kActualLeadingZeroes);
+   return -1; 
   }
 
   // Free the context structure.

@@ -7,6 +7,10 @@ of the method can be found in "HyperLogLog in Practice: Algorithmic Engineering
 of a State of the Art Cardinality Estimation Algorithm" by Heule, Nunkesser,
 and Hall.
 
+NOTE: The implementation presented here does not employ the optimizations
+described by the authors for HyperLogLog++. Rather, it is a straightforward
+implementation of the original algorithm. Enhancements are planned.
+
 For maximum flexibility, the first cut of the implementation exposes a C-style
 interface. A C++ wrapper class will eventually be provided.
 

@@ -30,7 +30,7 @@ struct HLL_CTX;
 HLL_CTX* HLL_init(int precision);
 
 // Update the counter with an element from the set.
-int HLL_update(HLL_CTX*, uint64_t element_hash);
+int HLL_update(HLL_CTX* ctx, uint64_t element_hash);
 
 // Obtain an estimate of the cardinality of the set.
 int HLL_cardinality(const HLL_CTX* ctx, uint64_t* cardinality);

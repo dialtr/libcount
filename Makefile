@@ -6,7 +6,7 @@ RANLIB=ranlib
 
 all: demo libhll.a
 
-demo: demo.o libhll.a
+demo: demo.o libhll.a -lssl -lcrypto
 	$(CC) -o demo demo.o libhll.a
 
 libhll.a: bitwise_ops.o hll.o
