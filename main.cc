@@ -10,6 +10,10 @@ int main(int argc, char* argv[]) {
   double y = pow(2.0, -3.0);
   printf("%lf\n", y);
 
+  uint64_t z = 1;
+  int count = __builtin_clzll(z);
+  printf("count=%d\n", count);
+
   return 0;
 }
 

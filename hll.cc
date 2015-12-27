@@ -135,6 +135,12 @@ int HLL_update(HLL_CTX* ctx, uint64_t element_hash) {
   // the number of leading zeroes, plus one, in the register.
   const uint64_t zeroes =
     nlz64(element_hash & ctx->zero_count_mask) - ctx->precision + 1;
+  
+  /*
+  // TODO(tdial): GCC has a builtin for leading zero count for uint64_t
+  const uint64_t zeroes =
+    __builtin_clzll(element_hash & ctx->zero_count_mask) - ctx->precision + 1;
+  */
 
   // Did we find a new max zero count in the associated register?
   if (zeroes > ctx->registers[substream_index]) {
