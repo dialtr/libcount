@@ -40,7 +40,7 @@ uint64_t HashString(const char* buffer) {
   // hold the result. We then grab the first 64 bits of the hash by
   // addressing the h64 member.
   struct hashval {
-    uint64_t      h64;
+    uint64_t h64;
     unsigned char l96[12];
   };
 
@@ -48,9 +48,9 @@ uint64_t HashString(const char* buffer) {
   SHA_CTX ctx;
   SHA1_Init(&ctx);
   SHA1_Update(&ctx, buffer, len);
-  hashval hv={0};
+  hashval hv = {0};
   SHA1_Final((unsigned char*)&hv, &ctx);
-  return hv.h64; 
+  return hv.h64;
 }
 
 int main(int argc, char* argv[]) {
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
   //
   // Perform a slightly more "realistic" test.
   //
-  
+
   // Randomly seed the PRNG
   srand(time(NULL));
 
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
   // unique values in the population of kIterations elements.
   const int kIterations = 100000000;
   const int kStringLen = 5;
-  
+
   // Initialize a HyperLogLog context structure.
   const int kPrecision = 8;
   HLL_CTX* ctx = HLL_init(kPrecision);
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
   for (int i = 0; i < kIterations; ++i) {
     // Create a random element
     FillBufferWithRandomLetters(buffer, kStringLen);
-    
+
     // Calculate a 64 bit hash of the element.
     const uint64_t hash = HashString(buffer);
 
@@ -102,8 +102,9 @@ int main(int argc, char* argv[]) {
 
   // Calculate the upper bound of the cardinality possible for the test.
   // The upper bound is just the number of possible strings that we could
-  // have generated. 
-  const uint64_t upper_bound = (uint64_t)(pow(26.0f, (double)kStringLen));
+  // have generated.
+  const uint64_t upper_bound = static_cast<uint64_t>(
+    (pow(26.0f, static_cast<double>(kStringLen))));
 
   // Get an estimate of the cardinality using the library
   uint64_t estimate = 0.0f;
@@ -112,7 +113,7 @@ int main(int argc, char* argv[]) {
   fprintf(stderr, "\n");
   fprintf(stderr, "cardinality upper bound: %lu\n", upper_bound);
   fprintf(stderr, "cardinality estimate:    %lu\n", estimate);
-  
+
   // Free the context structure.
   HLL_free(ctx);
 

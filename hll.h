@@ -40,4 +40,4 @@ void HLL_free(HLL_CTX* ctx);
 
 }  // extern "C"
 
-#endif
+#endif  // HLL_H_

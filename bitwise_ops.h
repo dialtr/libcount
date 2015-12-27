@@ -22,4 +22,4 @@
 // Adapted from the text "Hacker's Delight" by Henry S. Warren.
 uint64_t nlz64(uint64_t x);
 
-#endif
+#endif  // BITWISE_OPS_H_
