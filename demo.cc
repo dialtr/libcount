@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <set>
 #include <string>
 #include "hll.h"
 #include "hll_debug.h"
@@ -75,7 +76,8 @@ int main(int argc, char* argv[]) {
   const int kStringLen = 5;
   
   // Initialize a HyperLogLog context structure.
-  HLL_CTX* ctx = HLL_init(4);
+  const int kPrecision = 8;
+  HLL_CTX* ctx = HLL_init(kPrecision);
   if (!ctx) {
     fprintf(stderr, "** HLL_init() failed, returned errno %d\n", errno);
     return EXIT_FAILURE;
@@ -110,7 +112,7 @@ int main(int argc, char* argv[]) {
   fprintf(stderr, "\n");
   fprintf(stderr, "cardinality upper bound: %lu\n", upper_bound);
   fprintf(stderr, "cardinality estimate:    %lu\n", estimate);
- 
+  
   // Free the context structure.
   HLL_free(ctx);
 

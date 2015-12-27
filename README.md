@@ -7,12 +7,18 @@ of the method can be found in "HyperLogLog in Practice: Algorithmic Engineering
 of a State of the Art Cardinality Estimation Algorithm" by Heule, Nunkesser,
 and Hall.
 
-NOTE: The implementation presented here does not employ the optimizations
-described by the authors for HyperLogLog++. Rather, it is a straightforward
-implementation of the original algorithm. Enhancements are planned.
+NOTE: The implementation presented here does not employ all the innovations
+described by the authors of HyperLogLog++. Notably, while it does employ the
+constants derived by the authors, it does not attempt to save memory by using
+a sparse representation, nor does it revert to LinearCounting for low
+cardinalities.
+
+It is my hope to enhance the library so that it eventually supports all
+features described in the paper.
 
 For maximum flexibility, the first cut of the implementation exposes a C-style
-interface. A C++ wrapper class will eventually be provided.
+interface, following in the spirit of the OpenSSL cryptographic hash functions.
+A C++ wrapper class will eventually be provided.
 
 ## Sample Workflow
 

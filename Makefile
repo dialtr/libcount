@@ -1,7 +1,7 @@
 AR=ar
 CC=g++
-CFLAGS=-Wall -Werror -g
-#CFLAGS=-Wall -Werror -O3
+#CFLAGS=-Wall -Werror -g
+CFLAGS=-Wall -Werror -O3
 RANLIB=ranlib
 
 all: demo libhll.a
