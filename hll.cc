@@ -16,6 +16,7 @@
 #include "hll.h"
 #include <assert.h>
 #include <errno.h>
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include "bitwise_ops.h"
@@ -32,12 +33,32 @@ extern "C" {
 
 struct HLL_CTX {
   int      precision;
+  double   alpha;
   uint64_t updates;
   uint64_t zero_count_mask;
   uint64_t register_index_shift;
   uint64_t register_count;
   uint64_t registers[1];
 };
+
+double HLL_calculate_alpha(int precision) {
+  assert(precision >= HLL_MIN_PRECISION);
+  assert(precision <= HLL_MAX_PRECISION);
+
+  double m = precision;
+
+  // Constants taken from Heule, Nunkesser, Hall 2013
+  switch (precision) {
+    case 4:
+      return 0.673f;
+    case 5:
+      return 0.697f;
+    case 6:
+      return 0.709f;
+    default:
+      return (0.7213f / (1.0f + (1.079f / m)));
+  }
+}
 
 HLL_CTX* HLL_init(int precision) {
   // The caller must specify a precision value in the appropriate range.
@@ -69,11 +90,14 @@ HLL_CTX* HLL_init(int precision) {
   // Store the precision in the context.
   context->precision = precision;
 
+  // Calculate and store the alpha value used in raw cardinality estimation.
+  context->alpha = HLL_calculate_alpha(precision);
+
   // Compute a mask to mask off the leading 'precision' bits in order to
-  // facilitate the leading zero count. Since AND'ing the element hash with
-  // this mask will zero out 'precision' bits, to calculate the true number
-  // of leading zeroes after those bits, we'll need to subtract 'precision'
-  // from that count. 
+  // facilitate the leading zero count. NOTE: Since AND'ing the element hash
+  // with this mask will zero out 'precision' bits, to calculate the true
+  // number of leading zeroes after those bits, we'll need to subtract
+  // 'precision' from that count. 
   // TODO(tdial): Test this.
   context->zero_count_mask = 
     ~(((((uint64_t)1) << precision) - 1) << (64 - precision));
@@ -95,7 +119,7 @@ int HLL_update(HLL_CTX* ctx, uint64_t element_hash) {
     return -1;
   }
  
-  // Per the explanation in the HyperLogLog paper, the incoming stream of
+  // Per the explanation in the HyperLogLog++ paper, the incoming stream of
   // element hashes is divided into logical substreams by hashing the first
   // 'precision' bits of the hash. For each logical substream, we will store
   // the maximum number of leading zeroes found in the following bits of the
@@ -106,9 +130,9 @@ int HLL_update(HLL_CTX* ctx, uint64_t element_hash) {
   // for the substream index, find the number of leading zeroes, plus one.
   // This is done by first masking off the leading 'precision' bits to zero,
   // and performing the zero count. Next, we subtract 'precision' from the
-  // count since by definition, they were included as part of the mask.
-  // Finally, add one, since the algorithm requires that we store the number
-  // of leading zeroes, plus one, in the register.
+  // count since by definition, they were zeroed as part of the mask
+  // operation. Finally, add one, since the algorithm requires that we store
+  // the number of leading zeroes, plus one, in the register.
   const uint64_t zeroes =
     nlz64(element_hash & ctx->zero_count_mask) - ctx->precision + 1;
 
@@ -123,9 +147,53 @@ int HLL_update(HLL_CTX* ctx, uint64_t element_hash) {
   return 0;
 }
 
+double HLL_raw_estimate(const HLL_CTX* ctx) {
+  assert(ctx != NULL);
+  
+  // TODO(tdial): This code was written first to be correct. Check to see
+  // if eliminating the temporary variables in the loop makes a difference
+  // when compiled with full optimizations.
+
+  // Let m be the number of registers.
+  const double m = ctx->register_count;
+
+  // For each register, let max be the contents of the register.
+  // Let term be the reciprocal of 2 ^ max
+  // And let sum be the sum of all terms.
+  double sum = 0.0;
+  for (uint64_t i = 0; i < ctx->register_count; ++i) {
+    const double max = ctx->registers[i];
+    const double term = pow(2.0, -max);
+    sum += term;
+  }
+
+  // Calculate the harmonic mean
+  const double harmonic_mean = m * sum;
+
+  // Calculate the scale factor
+  // TODO(tdial): This could be calculated at initialization time.
+  const double scale_factor = HLL_calculate_alpha(ctx->precision) * m;
+
+  // Calculate the raw estimate: the harmonic mean multiplied by the scaler.
+  const double raw_estimate = harmonic_mean * scale_factor;
+
+  return raw_estimate;
+}
+
 int HLL_cardinality(const HLL_CTX* ctx, uint64_t* cardinality) {
-  // TODO: Implement
-  return -1;
+  assert(ctx != NULL);
+  assert(cardinality != NULL);
+  double raw_estimate = HLL_raw_estimate(ctx);
+  assert(raw_estimate >= 0.0);
+  if (raw_estimate < 0) {
+    // TODO(tdial): Should I come up with my own error codes?
+    errno = ERANGE;
+    return -1;
+  }
+
+  *cardinality = (uint64_t)raw_estimate;
+
+  return 0;
 }
 
 void HLL_free(HLL_CTX* ctx) {

@@ -15,6 +15,7 @@
 
 #include <errno.h>
 #include <inttypes.h>
+#include <math.h>
 #include <openssl/sha.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -93,8 +94,23 @@ int main(int argc, char* argv[]) {
     HLL_update(ctx, hash);
   }
 
+  // Debug print the structure
+  // TODO(tdial): This currently does not print the alpha
   HLL_debug_print(stderr, ctx);
 
+  // Calculate the upper bound of the cardinality possible for the test.
+  // The upper bound is just the number of possible strings that we could
+  // have generated. 
+  const uint64_t upper_bound = (uint64_t)(pow(26.0f, (double)kStringLen));
+
+  // Get an estimate of the cardinality using the library
+  uint64_t estimate = 0.0f;
+  HLL_cardinality(ctx, &estimate);
+
+  fprintf(stderr, "\n");
+  fprintf(stderr, "cardinality upper bound: %lu\n", upper_bound);
+  fprintf(stderr, "cardinality estimate:    %lu\n", estimate);
+ 
   // Free the context structure.
   HLL_free(ctx);
 

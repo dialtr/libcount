@@ -1,13 +1,15 @@
 #include <inttypes.h>
+#include <math.h>
 #include <stdio.h>
 
 int main(int argc, char* argv[]) {
-  printf("sizeof(uint64_t) = %lu\n", sizeof(uint64_t));
-  
-  const uint64_t kOne = 1;
-  const uint64_t value = kOne << 63;
+  double x = pow(2.0, 3.0);
+  x = 1.0 / x;
+  printf("%lf\n", x);
 
-  const uint64_t value2 = (1 << 63);
+  double y = pow(2.0, -3.0);
+  printf("%lf\n", y);
+
   return 0;
 }
 
