@@ -18,6 +18,8 @@
 #include <openssl/sha.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include <string>
 #include "hll.h"
 #include "hll_debug.h"
@@ -27,6 +29,26 @@ void FillBufferWithRandomLetters(char* buffer, size_t count) {
     buffer[i] = 'A' + rand() % 26;
   }
   buffer[count] = 0;
+}
+
+uint64_t HashString(const char* buffer) {
+  // The hashval structure is large enough to hold 160 bits, the size
+  // needed to hold a SHA-1 hash. We compute the SHA-1 using the
+  // standard OpenSSL functions, using the address of a hashval to
+  // hold the result. We then grab the first 64 bits of the hash by
+  // addressing the h64 member.
+  struct hashval {
+    uint64_t      h64;
+    unsigned char l96[12];
+  };
+
+  const size_t len = strlen(buffer);
+  SHA_CTX ctx;
+  SHA1_Init(&ctx);
+  SHA1_Update(&ctx, buffer, len);
+  hashval hv={0};
+  SHA1_Final((unsigned char*)&hv, &ctx);
+  return hv.h64; 
 }
 
 int main(int argc, char* argv[]) {
@@ -40,13 +62,16 @@ int main(int argc, char* argv[]) {
   //
   // Perform a slightly more "realistic" test.
   //
+  
+  // Randomly seed the PRNG
+  srand(time(NULL));
 
   // We'll create a set of kIterations strings, each of length kStringLen,
   // where each string is comprised of uppercase letters from the alpahbet.
   // Thus, for kStringLen = 4, there should be approximately 1/2 million
   // unique values in the population of kIterations elements.
-  const int kIterations = 10000000;
-  const int kStringLen = 4;
+  const int kIterations = 100000000;
+  const int kStringLen = 5;
   
   // Initialize a HyperLogLog context structure.
   HLL_CTX* ctx = HLL_init(4);
@@ -58,8 +83,17 @@ int main(int argc, char* argv[]) {
   // Run a series of values of predictable cardinality through the system.
   char buffer[kStringLen + 1];
   for (int i = 0; i < kIterations; ++i) {
+    // Create a random element
     FillBufferWithRandomLetters(buffer, kStringLen);
+    
+    // Calculate a 64 bit hash of the element.
+    const uint64_t hash = HashString(buffer);
+
+    // Update the HLL context with the element
+    HLL_update(ctx, hash);
   }
+
+  HLL_debug_print(stderr, ctx);
 
   // Free the context structure.
   HLL_free(ctx);
