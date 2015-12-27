@@ -16,6 +16,7 @@
 #include "hll.h"
 #include <assert.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <string.h>
 #include "bitwise_ops.h"
 #include "hll_debug.h"
@@ -136,10 +137,10 @@ void HLL_debug_print(FILE* file, HLL_CTX* ctx) {
   assert(file != NULL);
   assert(ctx != NULL);
   fprintf(file, "precision:            %d\n", ctx->precision);
-  fprintf(file, "updates:              %llu\n", ctx->updates);
+  fprintf(file, "updates:              %lu\n", ctx->updates);
   fprintf(file, "zero_count_mask:      %p\n", (void*)ctx->zero_count_mask);
-  fprintf(file, "register_index_shift: %llu\n", ctx->register_index_shift);
-  fprintf(file, "register_count:       %llu\n", ctx->register_count);
+  fprintf(file, "register_index_shift: %lu\n", ctx->register_index_shift);
+  fprintf(file, "register_count:       %lu\n", ctx->register_count);
 }
 
 int HLL_test(FILE* file) {
@@ -162,7 +163,7 @@ int HLL_test(FILE* file) {
     const uint64_t kExpectedLeadingZeroes = (64 - i - 1);
     const uint64_t actual = nlz64(kTestMask);
     if (actual != kExpectedLeadingZeroes) {
-      fprintf(file, "nlz64(): expected %llu leading zeroes, counted %llu\n",
+      fprintf(file, "nlz64(): expected %lu leading zeroes, counted %lu\n",
         kExpectedLeadingZeroes, actual);
       return -1;
     }
@@ -215,7 +216,7 @@ int HLL_test(FILE* file) {
   // Updates should be zero
   const uint64_t kExpectedUpdates = 0;
   if (ctx->updates != kExpectedUpdates) {
-    fprintf(file, "HLL_init(): HLL_CTX updates value is %llu, expected %llu\n",
+    fprintf(file, "HLL_init(): HLL_CTX updates value is %lu, expected %lu\n",
       ctx->updates, kExpectedUpdates);
     return -1;
   }
@@ -224,7 +225,7 @@ int HLL_test(FILE* file) {
   const uint64_t kExpectedRegisterCount = (1 << ctx->precision);
   if (ctx->register_count != kExpectedRegisterCount) {
     fprintf(file,
-      "HLL_init(): HLL_CTX register_count is %llu, expected %llu\n",
+      "HLL_init(): HLL_CTX register_count is %lu, expected %lu\n",
       ctx->register_count, kExpectedRegisterCount);
     return -1;
   }
@@ -232,7 +233,7 @@ int HLL_test(FILE* file) {
   // All registers should be initialized to zero.
   for (uint64_t r = 0; r < ctx->register_count; ++r) {
     if (ctx->registers[r] != 0) {
-      fprintf(file, "HLL_init(): HLL_CTX register[%llu] is %llu, expected 0\n",
+      fprintf(file, "HLL_init(): HLL_CTX register[%lu] is %lu, expected 0\n",
         r, ctx->registers[r]);
       return -1;
     }
@@ -263,8 +264,8 @@ int HLL_test(FILE* file) {
   const uint64_t kExpectedLeadingZeroes = (64 - kPrecision - 1) + 1;
   const uint64_t kActualLeadingZeroes = ctx->registers[0];
   if (kExpectedLeadingZeroes != kActualLeadingZeroes) {
-    fprintf(file, "HLL_update(): expected register 0 to hold value of %llu"
-     " but found %llu\n", kExpectedLeadingZeroes, kActualLeadingZeroes);
+    fprintf(file, "HLL_update(): expected register 0 to hold value of %lu"
+     " but found %lu\n", kExpectedLeadingZeroes, kActualLeadingZeroes);
    return -1; 
   }
 
