@@ -62,14 +62,14 @@ This library is currently in ALPHA.
      }
 
 ## Contact
-    Please see AUTHORS in the root of the repository for contact information.
+Please see AUTHORS in the root of the repository for contact information.
 
 ## Dependencies
-    The libcount.a library has no dependencies outside of the standard C/C++
-    libraries. Maintaining this property is a design goal.
+The libcount.a library has no dependencies outside of the standard C/C++
+libraries. Maintaining this property is a design goal.
 
-    The demo program currently requires OpenSSL due to its use of the SHA1
-    hash functions. Future unit tests will also likely require this library.
+The demo program currently requires OpenSSL due to its use of the SHA1
+hash functions. Future unit tests will also likely require this library.
 
 ## Future Planned Development
 
