@@ -212,7 +212,7 @@ void HLL_debug_print(FILE* file, HLL_CTX* ctx) {
   fprintf(file, "precision:            %d\n", ctx->precision);
   fprintf(file, "updates:              %lu\n", ctx->updates);
   fprintf(file, "zero_count_mask:      %p\n",
-    reinterpret_cast<void*>(ctx->zero_count_mask));
+          reinterpret_cast<void*>(ctx->zero_count_mask));
   fprintf(file, "register_index_shift: %lu\n", ctx->register_index_shift);
   fprintf(file, "register_count:       %lu\n", ctx->register_count);
   for (uint64_t i = 0; i < ctx->register_count; ++i) {

@@ -3,7 +3,7 @@ build_config.mk
 
 # Ignore build targets
 demo
-libhll.a
+libcount.a
 
 # Ignore object files
 *.o
