@@ -20,7 +20,7 @@ correction (based on empirical research conducted by the paper's authors)
 is implemented in libcount.
 
 For the sake of simplicity and portability, the library exposes a C-style
-interface, modeled after the OpenSSH hash functions. A C++ interface is
+interface, modeled after the OpenSSL hash functions. A C++ interface is
 planned.
 
 ## Current Status
