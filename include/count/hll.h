@@ -1,4 +1,4 @@
-// Copyright 2015 The libhll Authors.
+// Copyright 2015 The libcount Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef HLL_H_
-#define HLL_H_
+#ifndef INCLUDE_COUNT_HLL_H_
+#define INCLUDE_COUNT_HLL_H_
 
 #include <inttypes.h>
 
@@ -40,4 +40,4 @@ void HLL_free(HLL_CTX* ctx);
 
 }  // extern "C"
 
-#endif  // HLL_H_
+#endif  // INCLUDE_COUNT_HLL_H_

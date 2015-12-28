@@ -1,4 +1,4 @@
-// Copyright 2015 The libhll Authors.
+// Copyright 2015 The libcount Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,13 +13,38 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef BITWISE_OPS_H_
-#define BITWISE_OPS_H_
+#include "count/bitwise_ops.h"
 
-#include <inttypes.h>
-
-// Count the number of leading zeroes in the 64-bit unsigned quantity.
-// Adapted from the text "Hacker's Delight" by Henry S. Warren.
-uint64_t nlz64(uint64_t x);
-
-#endif  // BITWISE_OPS_H_
+uint64_t nlz64(uint64_t x) {
+  uint64_t y = 0;
+  uint64_t n = 64;
+  y = x >> 32;
+  if (y != 0) {
+    n = n - 32;
+    x = y;
+  }
+  y = x >> 16;
+  if (y != 0) {
+    n = n - 16;
+    x = y;
+  }
+  y = x >> 8;
+  if (y != 0) {
+    n = n - 8;
+    x = y;
+  }
+  y = x >> 4;
+  if (y != 0) {
+    n = n - 4;
+    x = y;
+  }
+  y = x >> 2;
+  if (y != 0) {
+    n = n - 2;
+    x = y;
+  }
+  y = x >> 1;
+  if (y != 0)
+    return n - 2;
+  return n - x;
+}

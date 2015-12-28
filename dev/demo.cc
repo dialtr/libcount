@@ -23,8 +23,8 @@
 #include <time.h>
 #include <set>
 #include <string>
-#include "hll.h"
-#include "hll_debug.h"
+#include "count/hll.h"
+#include "count/hll_debug.h"
 
 void FillBufferWithRandomLetters(char* buffer, size_t count) {
   for (size_t i = 0; i < count; ++i) {
