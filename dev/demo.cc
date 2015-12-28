@@ -21,10 +21,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <iostream>
 #include <set>
 #include <string>
 #include "count/hll.h"
 #include "count/hll_debug.h"
+
+using std::cerr;
+using std::endl;
 
 void FillBufferWithRandomLetters(char* buffer, size_t count) {
   for (size_t i = 0; i < count; ++i) {
@@ -55,9 +59,9 @@ uint64_t HashString(const char* buffer) {
 
 int main(int argc, char* argv[]) {
   // Run unit tests
-  int result = HLL_test(stderr);
+  int result = HLL_test();
   if (result != 0) {
-    fprintf(stderr, "** TESTS FAILED **\n");
+    cerr << "** TESTS FAILED **\n" << endl;
     return EXIT_FAILURE;
   }
 
@@ -79,7 +83,7 @@ int main(int argc, char* argv[]) {
   const int kPrecision = 8;
   HLL_CTX* ctx = HLL_init(kPrecision);
   if (!ctx) {
-    fprintf(stderr, "** HLL_init() failed, returned errno %d\n", errno);
+    cerr << "** HLL_init() failed, returned errno " << errno << endl;
     return EXIT_FAILURE;
   }
 
@@ -96,10 +100,6 @@ int main(int argc, char* argv[]) {
     HLL_update(ctx, hash);
   }
 
-  // Debug print the structure
-  // TODO(tdial): This currently does not print the alpha
-  HLL_debug_print(stderr, ctx);
-
   // Calculate the upper bound of the cardinality possible for the test.
   // The upper bound is just the number of possible strings that we could
   // have generated.
@@ -110,9 +110,9 @@ int main(int argc, char* argv[]) {
   uint64_t estimate = 0.0f;
   HLL_cardinality(ctx, &estimate);
 
-  fprintf(stderr, "\n");
-  fprintf(stderr, "cardinality upper bound: %lu\n", upper_bound);
-  fprintf(stderr, "cardinality estimate:    %lu\n", estimate);
+  cerr << endl
+       << "cardinality upper bound: " << upper_bound
+       << "cardinality estimate:    " << estimate << endl;
 
   // Free the context structure.
   HLL_free(ctx);
