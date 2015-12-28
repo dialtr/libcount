@@ -42,10 +42,9 @@ RANLIB = ranlib
 CXXFLAGS += -I. -I./include $(PLATFORM_CXXFLAGS) $(OPT) $(WARNINGFLAGS)
 COUNT_OBJECTS = $(COUNT_FILES:.cc=.o)
 TESTS = 
-DEV = demo
 
 # Targets
-all: libcount.a $(DEV)
+all: libcount.a
 
 .PHONY:
 check: $(TESTS)
