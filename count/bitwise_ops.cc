@@ -1,4 +1,4 @@
-// Copyright 2015 The libhll Authors.
+// Copyright 2015 The libcount Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,20 +13,38 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef HLL_DEBUG_H_
-#define HLL_DEBUG_H_
+#include "count/bitwise_ops.h"
 
-#include <stdio.h>
-#include "hll.h"
-
-extern "C" {
-
-// Print debug information about a context.
-void HLL_debug_print(FILE* file, HLL_CTX* ctx);
-
-// Run unit tests. Returns 0 on success, -1 otherwise. Logs errors to file.
-int HLL_test(FILE* file);
-
-}  // extern "C"
-
-#endif  // HLL_DEBUG_H_
+uint64_t nlz64(uint64_t x) {
+  uint64_t y = 0;
+  uint64_t n = 64;
+  y = x >> 32;
+  if (y != 0) {
+    n = n - 32;
+    x = y;
+  }
+  y = x >> 16;
+  if (y != 0) {
+    n = n - 16;
+    x = y;
+  }
+  y = x >> 8;
+  if (y != 0) {
+    n = n - 8;
+    x = y;
+  }
+  y = x >> 4;
+  if (y != 0) {
+    n = n - 4;
+    x = y;
+  }
+  y = x >> 2;
+  if (y != 0) {
+    n = n - 2;
+    x = y;
+  }
+  y = x >> 1;
+  if (y != 0)
+    return n - 2;
+  return n - x;
+}

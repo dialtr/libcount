@@ -1,4 +1,4 @@
-// Copyright 2015 The libhll Authors.
+// Copyright 2015 The libcount Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,13 +13,20 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef BITWISE_OPS_H_
-#define BITWISE_OPS_H_
+#ifndef INCLUDE_COUNT_HLL_DEBUG_H_
+#define INCLUDE_COUNT_HLL_DEBUG_H_
 
-#include <inttypes.h>
+#include <stdio.h>
+#include "count/hll.h"
 
-// Count the number of leading zeroes in the 64-bit unsigned quantity.
-// Adapted from the text "Hacker's Delight" by Henry S. Warren.
-uint64_t nlz64(uint64_t x);
+extern "C" {
 
-#endif  // BITWISE_OPS_H_
+// Print debug information about a context.
+void HLL_debug_print(FILE* file, HLL_CTX* ctx);
+
+// Run unit tests. Returns 0 on success, -1 otherwise. Logs errors to file.
+int HLL_test(FILE* file);
+
+}  // extern "C"
+
+#endif  // INCLUDE_COUNT_HLL_DEBUG_H_

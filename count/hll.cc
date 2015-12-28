@@ -1,4 +1,4 @@
-// Copyright 2015 The libhll Authors.
+// Copyright 2015 The libcount Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,14 +13,14 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#include "hll.h"
+#include "count/hll.h"
 #include <assert.h>
 #include <errno.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-#include "bitwise_ops.h"
-#include "hll_debug.h"
+#include "count/bitwise_ops.h"
+#include "count/hll_debug.h"
 
 namespace {
 
@@ -212,7 +212,7 @@ void HLL_debug_print(FILE* file, HLL_CTX* ctx) {
   fprintf(file, "precision:            %d\n", ctx->precision);
   fprintf(file, "updates:              %lu\n", ctx->updates);
   fprintf(file, "zero_count_mask:      %p\n",
-    reinterpret_cast<void*>(ctx->zero_count_mask));
+          reinterpret_cast<void*>(ctx->zero_count_mask));
   fprintf(file, "register_index_shift: %lu\n", ctx->register_index_shift);
   fprintf(file, "register_count:       %lu\n", ctx->register_count);
   for (uint64_t i = 0; i < ctx->register_count; ++i) {
