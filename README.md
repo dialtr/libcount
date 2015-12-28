@@ -29,7 +29,7 @@ This library is currently in ALPHA.
 
 ## Building
 
-     git clone https://github.com/dialtr/hyperloglog
+     git clone https://github.com/dialtr/libcount
      cd hyperloglog
      make
      sudo make install
