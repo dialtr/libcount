@@ -13,7 +13,25 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef INCLUDE_COUNT_LICENSE_TEMPLATE_H_
-#define INCLUDE_COUNT_LICENSE_TEMPLATE_H_
+#ifndef INCLUDE_COUNT_UTILITY_H_
+#define INCLUDE_COUNT_UTILITY_H_
 
-#endif  // INCLUDE_COUNT_LICENSE_TEMPLATE_H_
+#include <inttypes.h>
+
+namespace libcount {
+
+// If the destination pointer is valid, copy the source value to it.
+template <typename Type> bool MaybeAssign(Type* dest, const Type& src) {
+  if (dest) {
+    *dest = src;
+    return true;
+  }
+  return false;
+}
+
+// Return the number of leading zero bits in the unsigned value.
+uint8_t CountLeadingZeroes(uint64_t value);
+
+}  // namespace libcount
+
+#endif  // INCLUDE_COUNT_UTILITY_H_
