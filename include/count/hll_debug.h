@@ -13,11 +13,11 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef INCLUDE_COUNT_HLL_DEBUG_H_
-#define INCLUDE_COUNT_HLL_DEBUG_H_
+#ifndef INCLUDE_COUNT_HLLC_DEBUG_H_
+#define INCLUDE_COUNT_HLLC_DEBUG_H_
 
 #include <stdio.h>
-#include "count/hll.h"
+#include "count/hllc.h"
 
 extern "C" {
 
@@ -26,4 +26,4 @@ int HLL_test();
 
 }  // extern "C"
 
-#endif  // INCLUDE_COUNT_HLL_DEBUG_H_
+#endif  // INCLUDE_COUNT_HLLC_DEBUG_H_

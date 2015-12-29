@@ -13,7 +13,7 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#include "count/hll.h"
+#include "count/hllc.h"
 #include <assert.h>
 #include <errno.h>
 #include <math.h>
