@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
   HLL_cardinality(ctx, &estimate);
 
   cerr << endl
-       << "cardinality upper bound: " << upper_bound
+       << "cardinality upper bound: " << upper_bound << endl
        << "cardinality estimate:    " << estimate << endl;
 
   // Free the context structure.

@@ -58,6 +58,14 @@ fi
 # We may have platform-specific CXX flags
 PLATFORM_CXXFLAGS=""
 
+# MacOSX doesn't seem to ship with openssl-devel, so to build the demo
+# program, the library will have to be built from source. The default
+# install prefix puts the headers in /usr/local/ssl/include, so add
+# this to the include path if that directory exists.
+if [ -d "/usr/local/ssl" ]; then
+  PLATFORM_CXXFLAGS+=" -I/usr/local/ssl/include "
+fi
+
 # Determine OS-specifics
 case "$TARGET_OS" in
   Darwin)
