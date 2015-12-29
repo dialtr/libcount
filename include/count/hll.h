@@ -1,0 +1,50 @@
+// Copyright 2015 The libcount Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License. See the AUTHORS file for names of
+// contributors.
+
+#ifndef INCLUDE_COUNT_HLL_H_
+#define INCLUDE_COUNT_HLL_H_
+
+#include <inttypes.h>
+
+namespace libcount {
+
+class HLL {
+ public:
+  virtual ~HLL();
+
+  // Create an instance of a HyperLogLog cardinality estimator. Valid values
+  // for precision are [4..16] inclusive, and govern the precision of the
+  // estimate. Returns NULL on failure. In the event of failure, the caller
+  // may provide a pointer-to integer to learn the reason.
+  static HLL* Create(int precision, int* error);
+
+  // Update the instance to record the observation of an element. It is
+  // assumed that the caller uses a high-quality 64-bit hash function that
+  // is free of biases. Empircally, using a subset of bits from a well-known
+  // cryptographic hash function such as SHA1, is a good choice.
+  void Update(uint64_t hash);
+
+  // Return an estimate of the cardinality.
+  uint64_t GetCardinalityEstimate() const;
+
+ private:
+  HLL(int precision);
+  HLL(const HLL& no_copy);
+  HLL& operator=(const HLL& no_assign);
+};
+
+}  // namespace libcount
+
+#endif  // INCLUDE_COUNT_HLL_H_

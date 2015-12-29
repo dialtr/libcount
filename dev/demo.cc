@@ -24,8 +24,8 @@
 #include <iostream>
 #include <set>
 #include <string>
-#include "count/hll.h"
-#include "count/hll_debug.h"
+#include "count/hllc.h"
+#include "count/hllc_debug.h"
 
 using std::cerr;
 using std::endl;

@@ -21,7 +21,7 @@
 #include <string.h>
 #include <iostream>
 #include "count/bitwise_ops.h"
-#include "count/hll_debug.h"
+#include "count/hllc_debug.h"
 
 using std::cerr;
 using std::endl;
