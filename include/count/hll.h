@@ -37,7 +37,7 @@ class HLL {
   void Update(uint64_t hash);
 
   // Return an estimate of the cardinality.
-  uint64_t GetCardinalityEstimate() const;
+  uint64_t EstimateCardinality() const;
 
  private:
   int precision_;

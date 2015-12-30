@@ -107,7 +107,7 @@ void HLL::Update(uint64_t hash) {
   }
 }
 
-uint64_t HLL::GetCardinalityEstimate() const {
+uint64_t HLL::EstimateCardinality() const {
   // Let 'm' be the number of registers.
   const double m = static_cast<double>(register_count_);
 

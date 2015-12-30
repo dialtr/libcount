@@ -14,35 +14,61 @@
    contributors.
 */
 
-#ifndef INCLUDE_COUNT_C_H_
-#define INCLUDE_COUNT_C_H_
+#include "count/c.h"
+#include <assert.h>
+#include <stdlib.h>
+#include "count/hll.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+using libcount::HLL;
+
 #include <stdint.h>
 
 /* Exported types */
 
-typedef struct hll_t hll_t;
+struct hll_t {
+  HLL* rep;
+};
 
 /* HLL Operations */
 
-/* Create a HyperLogLog context object to estimate cardinality. */
-extern hll_t* HLL_create(int precision, int* opt_error);
+hll_t* HLL_create(int precision, int* opt_error) {
+  HLL* rep = HLL::Create(precision, opt_error);
+  if (rep == NULL) {
+    return NULL;
+  }
 
-/* Update a context to record an element of the set being counted. */
-extern void HLL_update(hll_t* ctx, uint64_t hash);
+  hll_t* obj = reinterpret_cast<hll_t*>(malloc(sizeof(hll_t)));
+  if (obj == NULL) {
+    delete rep;
+    return NULL;
+  }
 
-/* Return an estimate of the cardinality of the set being counted. */
-extern uint64_t HLL_estimate_cardinality(hll_t* ctx);
+  obj->rep = rep;
+  return obj;
+}
 
-/* Free resources associated with a context. */
-extern void HLL_free(hll_t* ctx);
+void HLL_update(hll_t* ctx, uint64_t hash) {
+  assert(ctx != NULL);
+  ctx->rep->Update(hash);
+}
+
+uint64_t HLL_estimate_cardinality(hll_t* ctx) {
+  assert(ctx != NULL);
+  return ctx->rep->EstimateCardinality();
+}
+
+void HLL_free(hll_t* ctx) {
+  assert(ctx != NULL);
+  assert(ctx->rep != NULL);
+  delete ctx->rep;
+  ctx->rep = NULL;
+  free(ctx);
+}
 
 #ifdef __cplusplus
 } /* end extern "C" */
 #endif
-
-#endif /* INCLUDE_COUNT_C_H_ */

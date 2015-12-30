@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
   uint64_t estimate = 0.0f;
   HLL_cardinality(ctx, &estimate);
 
-  uint64_t estimate_cpp = hll->GetCardinalityEstimate();
+  uint64_t estimate_cpp = hll->EstimateCardinality();
 
   cerr << endl
        << "cardinality upper bound:  " << upper_bound << endl

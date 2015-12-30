@@ -18,14 +18,14 @@
 #define INCLUDE_COUNT_C_H_
 
 #ifdef __cplusplus
-extern "C {                                                          // NOLINT
+extern "C" {
 #endif
 
 #include <stdint.h>
 
-    /* Exported types */
+/* Exported types */
 
-    typedef struct hll_t hll_t;
+typedef struct hll_t hll_t;
 
 /* HLL Operations */
 
