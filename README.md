@@ -20,8 +20,9 @@ correction (based on empirical research conducted by the paper's authors)
 is implemented in libcount.
 
 For the sake of simplicity and portability, the library exposes a C-style
-interface, modeled after the OpenSSL hash functions. A C++ interface is
-planned.
+interface, modeled after the OpenSSL hash functions. 
+
+Both C/C++ interfaces are available. The examples below demonstrate use.
 
 ## Current Status
 
@@ -30,12 +31,13 @@ This library is currently in ALPHA.
 ## Building
 
      git clone https://github.com/dialtr/libcount
-     cd hyperloglog
+     cd libcount
      make
      sudo make install
 
 ## Minimal Examples
 
+### C++
 ```C++
 #include <count/hll.h>
 
@@ -70,6 +72,7 @@ int main(int argc, char* argv[]) {
 }
 ```
 
+### C
 ```C
 #include <count/c.h>
 
