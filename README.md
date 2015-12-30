@@ -46,7 +46,6 @@ uint64_t Hash(int x) {
   // for hashing objects that are counted. One suggestion is
   // to use a cryptographic hash function (SHA1, MD5, etc) and
   // return a subset of those bits.
-
   return x;
 }
 
@@ -81,7 +80,6 @@ uint64_t Hash(int x) {
   // for hashing objects that are counted. One suggestion is
   // to use a cryptographic hash function (SHA1, MD5, etc) and
   // return a subset of those bits.
-
   return x;
 }
 
