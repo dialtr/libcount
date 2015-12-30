@@ -43,9 +43,9 @@ This library is currently in ALPHA.
 
 uint64_t Hash(int x) {
   // Users of this library should provide a good hash function
-  // for hashing objects that are counted. One suggestion is
-  // to use a cryptographic hash function (SHA1, MD5, etc) and
-  // return a subset of those bits.
+  // for hashing objects that are being counted. One suggestion
+  // is to use a cryptographic hash function (SHA1, MD5, etc)
+  // and return a subset of those bits.
   return x;
 }
 
@@ -77,9 +77,9 @@ int main(int argc, char* argv[]) {
 
 uint64_t Hash(int x) {
   // Users of this library should provide a good hash function
-  // for hashing objects that are counted. One suggestion is
-  // to use a cryptographic hash function (SHA1, MD5, etc) and
-  // return a subset of those bits.
+  // for hashing objects that are being counted. One suggestion
+  // is to use a cryptographic hash function (SHA1, MD5, etc)
+  // and return a subset of those bits.
   return x;
 }
 
