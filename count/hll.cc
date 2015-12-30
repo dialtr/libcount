@@ -105,6 +105,10 @@ void HLL::Update(uint64_t hash) {
   if (count > registers_[index]) {
     registers_[index] = count;
   }
+
+  // Record update count.
+  // TODO(tdial): Provide an API to return this value.
+  ++updates_;
 }
 
 uint64_t HLL::EstimateCardinality() const {
