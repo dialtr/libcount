@@ -24,11 +24,12 @@
 #include <iostream>
 #include <set>
 #include <string>
+#include "count/c.h"
 #include "count/hll.h"
-#include "count/hll_debug.h"
 
 using std::cerr;
 using std::endl;
+using libcount::HLL;
 
 void FillBufferWithRandomLetters(char* buffer, size_t count) {
   for (size_t i = 0; i < count; ++i) {
@@ -58,17 +59,6 @@ uint64_t HashString(const char* buffer) {
 }
 
 int main(int argc, char* argv[]) {
-  // Run unit tests
-  int result = HLL_test();
-  if (result != 0) {
-    cerr << "** TESTS FAILED **\n" << endl;
-    return EXIT_FAILURE;
-  }
-
-  //
-  // Perform a slightly more "realistic" test.
-  //
-
   // Randomly seed the PRNG
   srand(time(NULL));
 
@@ -81,11 +71,15 @@ int main(int argc, char* argv[]) {
 
   // Initialize a HyperLogLog context structure.
   const int kPrecision = 8;
-  HLL_CTX* ctx = HLL_init(kPrecision);
+  int error = 0;
+  hll_t* ctx = HLL_create(kPrecision, &error);
   if (!ctx) {
-    cerr << "** HLL_init() failed, returned errno " << errno << endl;
+    cerr << "** HLL_create() failed, returned errno " << errno << endl;
     return EXIT_FAILURE;
   }
+
+  // Initialize a C++ HyperLogLog instance
+  HLL* hll = HLL::Create(kPrecision);
 
   // Run a series of values of predictable cardinality through the system.
   char buffer[kStringLen + 1];
@@ -96,8 +90,9 @@ int main(int argc, char* argv[]) {
     // Calculate a 64 bit hash of the element.
     const uint64_t hash = HashString(buffer);
 
-    // Update the HLL context with the element
+    // Update the HLL context (and C++ instance) with the element
     HLL_update(ctx, hash);
+    hll->Update(hash);
   }
 
   // Calculate the upper bound of the cardinality possible for the test.
@@ -107,15 +102,20 @@ int main(int argc, char* argv[]) {
     (pow(26.0f, static_cast<double>(kStringLen))));
 
   // Get an estimate of the cardinality using the library
-  uint64_t estimate = 0.0f;
-  HLL_cardinality(ctx, &estimate);
+  uint64_t estimate = HLL_estimate_cardinality(ctx);
+
+  uint64_t estimate_cpp = hll->EstimateCardinality();
 
   cerr << endl
-       << "cardinality upper bound: " << upper_bound << endl
-       << "cardinality estimate:    " << estimate << endl;
+       << "cardinality upper bound:  " << upper_bound << endl
+       << "cardinality estimate:     " << estimate << endl
+       << "C++ cardinality estimate: " << estimate_cpp << endl;
 
   // Free the context structure.
   HLL_free(ctx);
+
+  // Delete C++ instance
+  delete hll;
 
   return EXIT_SUCCESS;
 }

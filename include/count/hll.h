@@ -16,28 +16,43 @@
 #ifndef INCLUDE_COUNT_HLL_H_
 #define INCLUDE_COUNT_HLL_H_
 
-#include <inttypes.h>
+#include <stdint.h>
 
-extern "C" {
+namespace libcount {
 
-// Opaque structure used to track a cardinality estimate.
-struct HLL_CTX;
+class HLL {
+ public:
+  virtual ~HLL();
 
-// Initialize a context structure for estimating the cardinality of a set.
-// The 'precision' argument is an integer in the range [4..16] inclusive
-// that governs the number of buckets to use in the stochastic averaging
-// algorithm that is used to improve estimates.
-HLL_CTX* HLL_init(int precision);
+  // Create an instance of a HyperLogLog cardinality estimator. Valid values
+  // for precision are [4..16] inclusive, and govern the precision of the
+  // estimate. Returns NULL on failure. In the event of failure, the caller
+  // may provide a pointer-to integer to learn the reason.
+  static HLL* Create(int precision, int* error = 0);
 
-// Update the counter with an element from the set.
-int HLL_update(HLL_CTX* ctx, uint64_t element_hash);
+  // Update the instance to record the observation of an element. It is
+  // assumed that the caller uses a high-quality 64-bit hash function that
+  // is free of biases. Empircally, using a subset of bits from a well-known
+  // cryptographic hash function such as SHA1, is a good choice.
+  void Update(uint64_t hash);
 
-// Obtain an estimate of the cardinality of the set.
-int HLL_cardinality(const HLL_CTX* ctx, uint64_t* cardinality);
+  // Return an estimate of the cardinality.
+  uint64_t EstimateCardinality() const;
 
-// Free a context previously allocated with HLL_init().
-void HLL_free(HLL_CTX* ctx);
+ private:
+  int precision_;
+  uint64_t updates_;
+  int register_count_;
+  uint8_t* registers_;
 
-}  // extern "C"
+  // Constructor private: we vet out the precision in the Create function.
+  explicit HLL(int precision);
+
+  // No copying allowed
+  HLL(const HLL& no_copy);
+  HLL& operator=(const HLL& no_assign);
+};
+
+}  // namespace libcount
 
 #endif  // INCLUDE_COUNT_HLL_H_

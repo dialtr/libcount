@@ -13,13 +13,26 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef INCLUDE_COUNT_BITWISE_OPS_H_
-#define INCLUDE_COUNT_BITWISE_OPS_H_
+#ifndef COUNT_UTILITY_H_
+#define COUNT_UTILITY_H_
 
-#include <inttypes.h>
+#include <stdint.h>
 
-// Count the number of leading zeroes in the 64-bit unsigned quantity.
-// Adapted from the text "Hacker's Delight" by Henry S. Warren.
-uint64_t nlz64(uint64_t x);
+namespace libcount {
 
-#endif  // INCLUDE_COUNT_BITWISE_OPS_H_
+// If the destination pointer is valid, copy the source value to it.
+template <typename Type>
+bool MaybeAssign(Type* dest, const Type& src) {
+  if (dest) {
+    *dest = src;
+    return true;
+  }
+  return false;
+}
+
+// Return the number of leading zero bits in the unsigned value.
+uint8_t CountLeadingZeroes(uint64_t value);
+
+}  // namespace libcount
+
+#endif  // COUNT_UTILITY_H_

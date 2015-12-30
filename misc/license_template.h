@@ -13,17 +13,7 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef INCLUDE_COUNT_HLL_DEBUG_H_
-#define INCLUDE_COUNT_HLL_DEBUG_H_
+#ifndef INCLUDE_COUNT_LICENSE_TEMPLATE_H_
+#define INCLUDE_COUNT_LICENSE_TEMPLATE_H_
 
-#include <stdio.h>
-#include "count/hll.h"
-
-extern "C" {
-
-// Run unit tests. Returns 0 on success, -1 otherwise. Logs errors to stderr.
-int HLL_test();
-
-}  // extern "C"
-
-#endif  // INCLUDE_COUNT_HLL_DEBUG_H_
+#endif  // INCLUDE_COUNT_LICENSE_TEMPLATE_H_

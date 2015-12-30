@@ -13,9 +13,11 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#include "count/bitwise_ops.h"
+#include "count/utility.h"
 
-uint64_t nlz64(uint64_t x) {
+namespace libcount {
+
+uint8_t CountLeadingZeroes(uint64_t x) {
   uint64_t y = 0;
   uint64_t n = 64;
   y = x >> 32;
@@ -44,7 +46,10 @@ uint64_t nlz64(uint64_t x) {
     x = y;
   }
   y = x >> 1;
-  if (y != 0)
-    return n - 2;
-  return n - x;
+  if (y != 0) {
+    return static_cast<uint8_t>(n - 2);
+  }
+  return static_cast<uint8_t>(n - x);
 }
+
+}  // namespace libcount
