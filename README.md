@@ -34,32 +34,76 @@ This library is currently in ALPHA.
      make
      sudo make install
 
-## Sample Program
+## Minimal Examples
 
-     #include <stdio.h>
-     #include <count/hll.h>
+```C++
+#include <count/hll.h>
 
-     int main(int argc, char* argv[]) {
-       // Initialize an HLL context structure with a precision of 8.
-       const int kPrecision = 8;
-       HLL_CTX* ctx = HLL_init(kPrecision);
+uint64_t Hash(int x) {
+  // Users of this library should provide a good hash function
+  // for hashing objects that are counted. One suggestion is
+  // to use a cryptographic hash function (SHA1, MD5, etc) and
+  // return a subset of those bits.
 
-       // Call HLL_update() once for each element in the set that you are
-       // counting. In a real program, you'd use a high-quality 64-bit hash
-       // function to obtain a hash code for each element.
-       const int kNumItems = 1000;
-       for (int i = 0; i < kNumItems; ++i) {
-         HLL_update(ctx, i);
-       }
+  return x;
+}
 
-       // Obtain an estimate of the cardinality of the set.
-       uint64_t estimate = 0;
-       HLL_cardinality(ctx, &estimate);
-       printf("Estimate of cardinality: %llu\n", estimate);
-       
-       // Free resources associated with the HLL context.
-       HLL_free(ctx);
-     }
+int main(int argc, char* argv[]) {
+  const int kPrecision = 8;
+
+  // Create an HLL object to track set cardinality.
+  HLL* hll = HLL::Create(kPrecision);
+
+  // Update object with hash of each element in your set.
+  const kNumItems = 10000;
+  for (int i = 0; i < kNumItems; ++i) {
+    hll->Update(Hash(i));
+  }
+
+  // Obtain the cardinality estimate.
+  uint64_t estimate = hll->EstimateCardinality();
+
+  // Delete object.
+  delete hll;
+  
+  return 0;
+}
+```
+
+```C
+#include <count/c.h>
+
+uint64_t Hash(int x) {
+  // Users of this library should provide a good hash function
+  // for hashing objects that are counted. One suggestion is
+  // to use a cryptographic hash function (SHA1, MD5, etc) and
+  // return a subset of those bits.
+
+  return x;
+}
+
+int main(int argc, char* argv[]) {
+  const int kPrecision = 8;
+  int error = 0;
+
+  // Create an HLL object to track set cardinality.
+  hll_t* hll = HLL_create(kPrecision, &error);
+
+  // Update object with hash of each element in your set.
+  const kNumItems = 10000;
+  for (int i = 0; i < kNumItems; ++i) {
+    HLL_update(hll, Hash(i));
+  }
+
+  // Obtain the cardinality estimate.
+  uint64_t estimate = HLL_estimate_cardinality(hll);
+
+  // Free object
+  HLL_free(hll);
+
+  return 0;
+}
+```
 
 ## Contact
 Please see AUTHORS in the root of the repository for contact information.
@@ -76,5 +120,4 @@ hash functions. Future unit tests will also likely require this library.
 * Implement LinearCounting for handling small cardinalities
 * Additional APIs to support parallelization
 * Optimizations
-* C++ class library
 * Sparse "register" storage
