@@ -19,10 +19,7 @@ suggested by Heule, Nunkesser, and Hall. For example, the library uses
 correction (based on empirical research conducted by the paper's authors)
 is implemented in libcount.
 
-For the sake of simplicity and portability, the library exposes a C-style
-interface, modeled after the OpenSSL hash functions. 
-
-Both C/C++ interfaces are available. The examples below demonstrate use.
+Both C and C++ interfaces are available. The examples below demonstrate use.
 
 ## Current Status
 
