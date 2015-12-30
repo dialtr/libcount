@@ -13,8 +13,8 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef INCLUDE_COUNT_HLL_H_
-#define INCLUDE_COUNT_HLL_H_
+#ifndef INCLUDE_COUNT_HLLC_H_
+#define INCLUDE_COUNT_HLLC_H_
 
 #include <inttypes.h>
 
