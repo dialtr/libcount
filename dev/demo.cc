@@ -26,8 +26,6 @@
 #include <string>
 #include "count/c.h"
 #include "count/hll.h"
-#include "count/hllc.h"
-#include "count/hllc_debug.h"
 
 using std::cerr;
 using std::endl;
@@ -84,9 +82,10 @@ int main(int argc, char* argv[]) {
 
   // Initialize a HyperLogLog context structure.
   const int kPrecision = 8;
-  HLL_CTX* ctx = HLL_init(kPrecision);
+  int error = 0;
+  hll_t* ctx = HLL_create(kPrecision, &error);
   if (!ctx) {
-    cerr << "** HLL_init() failed, returned errno " << errno << endl;
+    cerr << "** HLL_create() failed, returned errno " << errno << endl;
     return EXIT_FAILURE;
   }
 
@@ -114,8 +113,7 @@ int main(int argc, char* argv[]) {
     (pow(26.0f, static_cast<double>(kStringLen))));
 
   // Get an estimate of the cardinality using the library
-  uint64_t estimate = 0.0f;
-  HLL_cardinality(ctx, &estimate);
+  uint64_t estimate = HLL_estimate_cardinality(ctx);
 
   uint64_t estimate_cpp = hll->EstimateCardinality();
 

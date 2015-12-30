@@ -2,6 +2,7 @@
 
 # Must-haves
 
+* Separate examples for C/C++
 * Add unit tests
 * Add function to return number of updates to a context
 * Implement LinearCounting for small cardinalities.
