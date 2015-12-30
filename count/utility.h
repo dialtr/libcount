@@ -13,8 +13,8 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef INCLUDE_COUNT_UTILITY_H_
-#define INCLUDE_COUNT_UTILITY_H_
+#ifndef COUNT_UTILITY_H_
+#define COUNT_UTILITY_H_
 
 #include <stdint.h>
 
@@ -35,4 +35,4 @@ uint8_t CountLeadingZeroes(uint64_t value);
 
 }  // namespace libcount
 
-#endif  // INCLUDE_COUNT_UTILITY_H_
+#endif  // COUNT_UTILITY_H_

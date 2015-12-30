@@ -13,17 +13,13 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef INCLUDE_COUNT_HLLC_DEBUG_H_
-#define INCLUDE_COUNT_HLLC_DEBUG_H_
+#ifndef COUNT_BITWISE_OPS_H_
+#define COUNT_BITWISE_OPS_H_
 
-#include <stdio.h>
-#include "count/hllc.h"
+#include <stdint.h>
 
-extern "C" {
+// Count the number of leading zeroes in the 64-bit unsigned quantity.
+// Adapted from the text "Hacker's Delight" by Henry S. Warren.
+uint64_t nlz64(uint64_t x);
 
-// Run unit tests. Returns 0 on success, -1 otherwise. Logs errors to stderr.
-int HLL_test();
-
-}  // extern "C"
-
-#endif  // INCLUDE_COUNT_HLLC_DEBUG_H_
+#endif  // COUNT_BITWISE_OPS_H_
