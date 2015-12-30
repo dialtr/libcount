@@ -59,17 +59,6 @@ uint64_t HashString(const char* buffer) {
 }
 
 int main(int argc, char* argv[]) {
-  // Run unit tests
-  int result = HLL_test();
-  if (result != 0) {
-    cerr << "** TESTS FAILED **\n" << endl;
-    return EXIT_FAILURE;
-  }
-
-  //
-  // Perform a slightly more "realistic" test.
-  //
-
   // Randomly seed the PRNG
   srand(time(NULL));
 
