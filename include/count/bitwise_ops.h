@@ -16,7 +16,7 @@
 #ifndef INCLUDE_COUNT_BITWISE_OPS_H_
 #define INCLUDE_COUNT_BITWISE_OPS_H_
 
-#include <inttypes.h>
+#include <stdint.h>
 
 // Count the number of leading zeroes in the 64-bit unsigned quantity.
 // Adapted from the text "Hacker's Delight" by Henry S. Warren.

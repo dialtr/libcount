@@ -16,7 +16,7 @@
 #ifndef INCLUDE_COUNT_UTILITY_H_
 #define INCLUDE_COUNT_UTILITY_H_
 
-#include <inttypes.h>
+#include <stdint.h>
 
 namespace libcount {
 

@@ -16,7 +16,7 @@
 #ifndef INCLUDE_COUNT_HLLC_H_
 #define INCLUDE_COUNT_HLLC_H_
 
-#include <inttypes.h>
+#include <stdint.h>
 
 extern "C" {
 

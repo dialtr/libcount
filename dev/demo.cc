@@ -24,6 +24,7 @@
 #include <iostream>
 #include <set>
 #include <string>
+#include "count/c.h"
 #include "count/hll.h"
 #include "count/hllc.h"
 #include "count/hllc_debug.h"
