@@ -38,6 +38,8 @@ This library is currently in ALPHA.
 ```C++
 #include <count/hll.h>
 
+using libcount::HLL;
+
 uint64_t Hash(int x) {
   // Users of this library should provide a good hash function
   // for hashing objects that are being counted. One suggestion
