@@ -21,7 +21,8 @@
 namespace libcount {
 
 // If the destination pointer is valid, copy the source value to it.
-template <typename Type> bool MaybeAssign(Type* dest, const Type& src) {
+template <typename Type>
+bool MaybeAssign(Type* dest, const Type& src) {
   if (dest) {
     *dest = src;
     return true;

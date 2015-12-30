@@ -40,4 +40,4 @@ void HLL_free(HLL_CTX* ctx);
 
 }  // extern "C"
 
-#endif  // INCLUDE_COUNT_HLL_H_
+#endif  // INCLUDE_COUNT_HLLC_H_

@@ -61,17 +61,14 @@ inline uint8_t ZeroCountOf(uint64_t hash, int precision) {
 
   // Count zeroes, less the index bits we're masking off.
   return (CountLeadingZeroes(hash & mask) - static_cast<uint8_t>(precision));
-} 
+}
 
 }  // namespace
 
 namespace libcount {
 
 HLL::HLL(int precision)
-  : precision_(precision),
-    updates_(0),
-    register_count_(0),
-    registers_(NULL) {
+    : precision_(precision), updates_(0), register_count_(0), registers_(NULL) {
   // The precision is vetted by the Create() function.  Assertions nonetheless.
   assert(precision >= HLL_MIN_PRECISION);
   assert(precision <= HLL_MAX_PRECISION);
@@ -85,9 +82,7 @@ HLL::HLL(int precision)
   memset(registers_, 0, register_count_ * sizeof(registers_[0]));
 }
 
-HLL::~HLL() {
-  delete[] registers_;
-}
+HLL::~HLL() { delete[] registers_; }
 
 HLL* HLL::Create(int precision, int* error) {
   if ((precision < HLL_MIN_PRECISION) || (precision > HLL_MAX_PRECISION)) {

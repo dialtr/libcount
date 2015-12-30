@@ -217,8 +217,7 @@ int HLL_test() {
   uint64_t kNoLeadingZeroes = 0xffffffffffffffff;
   uint64_t test = nlz64(kNoLeadingZeroes);
   if (test != 0) {
-    cerr << "nlz64(): should return 0 when passed bitset of all 1's\n"
-         << endl;
+    cerr << "nlz64(): should return 0 when passed bitset of all 1's\n" << endl;
     return -1;
   }
 
@@ -229,7 +228,7 @@ int HLL_test() {
     const uint64_t kExpectedLeadingZeroes = (64 - i - 1);
     const uint64_t actual = nlz64(kTestMask);
     if (actual != kExpectedLeadingZeroes) {
-      cerr << "nlz64(): expected " << kExpectedLeadingZeroes 
+      cerr << "nlz64(): expected " << kExpectedLeadingZeroes
            << " leading zeroes, counted " << actual << endl;
       return -1;
     }
@@ -263,8 +262,8 @@ int HLL_test() {
   const int kPrecision = 10;
   ctx = HLL_init(kPrecision);
   if (ctx == NULL) {
-    cerr << "HLL_init(): Should succeed with precision value of "
-         << kPrecision << endl;
+    cerr << "HLL_init(): Should succeed with precision value of " << kPrecision
+         << endl;
     return -1;
   }
 
@@ -328,8 +327,8 @@ int HLL_test() {
   const uint64_t kActualLeadingZeroes = ctx->registers[0];
   if (kExpectedLeadingZeroes != kActualLeadingZeroes) {
     cerr << "HLL_update(): expected register 0 to hold value of "
-         << kExpectedLeadingZeroes << " but found "
-         << kActualLeadingZeroes << endl;
+         << kExpectedLeadingZeroes << " but found " << kActualLeadingZeroes
+         << endl;
     return -1;
   }
 

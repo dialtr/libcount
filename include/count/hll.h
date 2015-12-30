@@ -40,14 +40,14 @@ class HLL {
   uint64_t GetCardinalityEstimate() const;
 
  private:
-   int precision_;
-   uint64_t updates_;
-   int register_count_;
-   uint8_t* registers_;
+  int precision_;
+  uint64_t updates_;
+  int register_count_;
+  uint8_t* registers_;
 
   // Constructor private: we vet out the precision in the Create function.
-  HLL(int precision);
-  
+  explicit HLL(int precision);
+
   // No copying allowed
   HLL(const HLL& no_copy);
   HLL& operator=(const HLL& no_assign);
