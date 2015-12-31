@@ -36,7 +36,7 @@ extern hll_t* HLL_create(int precision, int* opt_error);
 extern void HLL_update(hll_t* ctx, uint64_t hash);
 
 /* Return the raw estimate of the cardinality of the set. */
-extern uint64_t HLL_raw_estimate(hll_t* ctx);
+double HLL_raw_estimate(hll_t* ctx);
 
 /* Return the LinearCounting estimate of the cardinality of the set. */
 extern uint64_t HLL_linear_counting_estimate(hll_t* ctx);

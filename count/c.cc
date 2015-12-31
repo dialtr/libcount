@@ -56,7 +56,7 @@ void HLL_update(hll_t* ctx, uint64_t hash) {
   ctx->rep->Update(hash);
 }
 
-uint64_t HLL_raw_estimate(hll_t* ctx) {
+double HLL_raw_estimate(hll_t* ctx) {
   assert(ctx != NULL);
   return ctx->rep->RawEstimate();
 }

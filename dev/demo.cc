@@ -66,8 +66,8 @@ int main(int argc, char* argv[]) {
   // where each string is comprised of uppercase letters from the alpahbet.
   // Thus, for kStringLen = 4, there should be approximately 1/2 million
   // unique values in the population of kIterations elements.
-  const int kIterations = 100000000;
-  const int kStringLen = 5;
+  const int kIterations = 10000000;
+  const int kStringLen = 4;
 
   // Initialize a HyperLogLog context structure.
   const int kPrecision = 8;
@@ -106,8 +106,11 @@ int main(int argc, char* argv[]) {
 
   uint64_t estimate_cpp = hll->Estimate();
 
+  uint64_t lc_estimate = hll->LinearCountingEstimate();
+
   cerr << endl
        << "cardinality upper bound:  " << upper_bound << endl
+       << "linear counting estimate: " << lc_estimate << endl
        << "cardinality estimate:     " << estimate << endl
        << "C++ cardinality estimate: " << estimate_cpp << endl;
 

@@ -37,7 +37,7 @@ class HLL {
   void Update(uint64_t hash);
 
   // Return the raw estimate based on the HyperLogLog algorithm.
-  uint64_t RawEstimate() const;
+  double RawEstimate() const;
 
   // Return the estimate according to the LinearCounting algorithm.
   uint64_t LinearCountingEstimate() const;
@@ -53,6 +53,9 @@ class HLL {
 
   // Constructor private: we vet out the precision in the Create function.
   explicit HLL(int precision);
+
+  // Return the number of registers equal to zero; used in LinearCounting.
+  int RegistersEqualToZero() const;
 
   // No copying allowed
   HLL(const HLL& no_copy);
