@@ -17,6 +17,7 @@
 #define INCLUDE_COUNT_HLL_H_
 
 #include <stdint.h>
+#include "count/hll_limits.h"
 
 namespace libcount {
 
@@ -38,9 +39,6 @@ class HLL {
 
   // Return the raw estimate based on the HyperLogLog algorithm.
   double RawEstimate() const;
-
-  // Return the estimate according to the LinearCounting algorithm.
-  uint64_t LinearCountingEstimate() const;
 
   // Return the bias-corrected estimate, following the HyperLogLog++ algorithm.
   uint64_t Estimate() const;

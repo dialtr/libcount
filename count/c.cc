@@ -61,11 +61,6 @@ double HLL_raw_estimate(hll_t* ctx) {
   return ctx->rep->RawEstimate();
 }
 
-uint64_t HLL_linear_counting_estimate(hll_t* ctx) {
-  assert(ctx != NULL);
-  return ctx->rep->LinearCountingEstimate();
-}
-
 uint64_t HLL_estimate(hll_t* ctx) {
   assert(ctx != NULL);
   return ctx->rep->Estimate();

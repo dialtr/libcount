@@ -106,11 +106,8 @@ int main(int argc, char* argv[]) {
 
   uint64_t estimate_cpp = hll->Estimate();
 
-  uint64_t lc_estimate = hll->LinearCountingEstimate();
-
   cerr << endl
        << "cardinality upper bound:  " << upper_bound << endl
-       << "linear counting estimate: " << lc_estimate << endl
        << "cardinality estimate:     " << estimate << endl
        << "C++ cardinality estimate: " << estimate_cpp << endl;
 

@@ -19,46 +19,12 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include "count/empirical_data.h"
 #include "count/utility.h"
 
 namespace {
 
-// The minimum and maximum allowed precision values.
-const int HLL_MIN_PRECISION = 4;
-const int HLL_MAX_PRECISION = 16;
-
 using libcount::CountLeadingZeroes;
-
-// Determine the empirically-derived bias correction value.
-double Bias(double raw_estimate, int precision) {
-  // TODO(tdial): Implement with table lookup using Google values.
-  return 0.0;
-}
-
-// Determine the empirically-derived threshold value.
-double Threshold(int precision) {
-  // TODO(tdial): Implement witht able lookup using Google values.
-  return 0.0;
-}
-
-// Helper to return the appropriate alpha value used to scale the raw estimate
-double AlphaForPrecision(int precision) {
-  assert(precision >= HLL_MIN_PRECISION);
-  assert(precision <= HLL_MAX_PRECISION);
-
-  // TODO(tdial): These magic constants were derived from empirical research
-  // by the authors of the HyperLogLog++ paper. Cite reference.
-  switch (precision) {
-    case 4:
-      return 0.673f;
-    case 5:
-      return 0.697f;
-    case 6:
-      return 0.709f;
-    default:
-      return (0.7213f / (1.0f + (1.079f / static_cast<double>(precision))));
-  }
-}
 
 // Helper that calculates cardinality according to LinearCounting
 double LinearCounting(double register_count, double zeroed_registers) {
@@ -147,16 +113,10 @@ double HLL::RawEstimate() const {
   assert(harmonic_mean >= 0.0);
 
   // The harmonic mean is scaled by a constant that depends on the precision.
-  const double estimate = AlphaForPrecision(precision_) * m * harmonic_mean;
+  const double estimate = EMP_alpha(precision_) * m * harmonic_mean;
   assert(estimate >= 0.0);
 
   return estimate;
-}
-
-uint64_t HLL::LinearCountingEstimate() const {
-  const double V = RegistersEqualToZero();
-  const double m = register_count_;
-  return LinearCounting(m, V);
 }
 
 uint64_t HLL::Estimate() const {
@@ -167,7 +127,7 @@ uint64_t HLL::Estimate() const {
   const double BiasThreshold = 5 * precision_;
 
   // Calculate E', the bias corrected estimate.
-  const double EPrime = (E < BiasThreshold) ? (E - Bias(E, precision_)) : E;
+  const double EP = (E < BiasThreshold) ? (E - EMP_bias(E, precision_)) : E;
 
   // The number of zerored registers decides whether we use LinearCounting.
   const int V = RegistersEqualToZero();
@@ -177,14 +137,14 @@ uint64_t HLL::Estimate() const {
   if (V != 0) {
     H = LinearCounting(register_count_, V);
   } else {
-    H = EPrime;
+    H = EP;
   }
 
   // Under an empirically-determined threshold we return H, otherwise E'.
-  if (H < Threshold(precision_)) {
+  if (H < EMP_threshold(precision_)) {
     return H;
   } else {
-    return EPrime;
+    return EP;
   }
 }
 
