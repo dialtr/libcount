@@ -124,7 +124,7 @@ uint64_t HLL::Estimate() const {
   const double E = RawEstimate();
 
   // Determine the threshold under which we apply a bias correction.
-  const double BiasThreshold = 5 * precision_;
+  const double BiasThreshold = 5 * register_count_;
 
   // Calculate E', the bias corrected estimate.
   const double EP = (E < BiasThreshold) ? (E - EMP_bias(E, precision_)) : E;

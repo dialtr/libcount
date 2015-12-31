@@ -17,6 +17,8 @@
 
 #include "count/empirical_data.h"
 #include <assert.h>
+#include <stdio.h>
+#include <algorithm>
 #include "count/hll_limits.h"
 
 double EMP_alpha(int precision) {
@@ -45,8 +47,75 @@ double EMP_threshold(int precision) {
 }
 
 double EMP_bias(double raw_estimate, int precision) {
-  /* TODO(tdial): Implement lookup and interpolation */
-  return 0.0;
+  assert(precision >= HLL_MIN_PRECISION);
+  assert(precision <= HLL_MAX_PRECISION);
+  if ((precision < HLL_MIN_PRECISION) || (precision > HLL_MAX_PRECISION)) {
+    return 0.0;
+  }
+
+  // The table of values starts with precision 4, which is at index zero.
+  const int index = precision - HLL_MIN_PRECISION;
+
+  // Aliases for the tables we're interested in.
+  const double* const estimates = RAW_ESTIMATE_DATA[index];
+  const double* const biases = BIAS_DATA[index];
+  
+  // The estimate arrays for a given precision do not all contain the same
+  // number of items. The largest contains 200, and those that contain
+  // fewer are padded with zeroes at the end.
+  const int LARGEST_INDEX = 200;
+  
+  // Since not all arrays contain the same number of elements, we need to find
+  // the maximum element, which is always the last one in the array. The
+  // result is pointer tha we can use as an interator in std::lower_bound().
+  // We add one to produce a value that points to the end of the range.
+  const double* max = std::max_element(estimates, estimates + LARGEST_INDEX) + 1;
+  assert(max > estimates);
+
+  // The std::lower_bound() function returns the first element that is NOT
+  // less than the search element.
+  const double* iter = std::lower_bound(estimates, max, raw_estimate);
+  
+  // Find the index of the element immediately less than raw_element.
+  const size_t left_index = 
+    (iter > estimates) ? (iter - estimates - 1) : (iter - estimates);
+  
+  // Find the index of the element immediately greater than the raw_element.
+  const size_t right_index = 
+   (iter < max) ? (iter - estimates) : (iter - estimates - 1); 
+
+  // The Heule, Nunkesser, and Hall paper describes using k-NN interpolation
+  // to calculate a bias value for a given raw estimate. However, they also
+  // mention that linear interpolation would offer similar results. Since
+  // it is simpler, we opt for linear interpolation.
+
+  // Begin by finding the left and right estimate that straddle the raw
+  // estimate. Then find the range over these estimates.
+  const double left_estimate = estimates[left_index];
+  const double right_estimate = estimates[right_index];
+  const double estimate_range = right_estimate - left_estimate;
+  
+  // Next, find the relative position (scaler value) of the raw estimate
+  // over that range, normalizing the value to be 0 <= scaler <= 1.
+  // We take care to avoid division by zero here by ensuring the denominator
+  // is greater than an arbitrarily chosen delta value. If it is less than
+  // that, we will just nudge to zero since the raw_estimate would by
+  // definition be within delta % of left_estimate anyway. 
+  const double delta = 0.0000001;
+  double scaler = 0.0;
+  if (estimate_range > delta) {
+    scaler = (raw_estimate - left_estimate) / estimate_range;
+  }
+
+  // Finally, determine the bias, using the scaler to find the interpolated
+  // value that lies at the same relative position between the left, right
+  // bias as the raw estimate did between the left, right estimate.
+  const double left_bias = biases[left_index];
+  const double right_bias = biases[right_index];
+  const double bias_range = right_bias - left_bias;
+  const double interpolated_bias = (scaler * bias_range) + left_bias;
+
+  return interpolated_bias;
 }
 
 /* Table Data Below */
