@@ -6,18 +6,17 @@ HyperLogLog++ cardinality estimation algorithm, as described in the paper:
 "HyperLogLog in Practice: Algorithmic Engineering of a State of the Art
 Cardinality Estimation Algorithm" by Heule, Nunkesser, and Hall.
 
-In its current (alpha) state, the library does not implement several of the
-features described in the paper. Most notably, the current implementation does
-not employ LinearCounting for small cardinalities, and thus will produce
-biased (high) cardinality estimations for small sets. It also does not
-currently implement sparse storage for the internal registers, nor any
-other type of compression scheme.
+The current (alpha) implementation does not implement sparse register
+storage as described in the paper referenced above; it employs a flat
+array of 8 bit registers, and thus the storage required to calculate
+cardinality is approximately (precision ^ 2) bytes.
 
-The implementation does, however, employ several improvements to HyperLogLog
-suggested by Heule, Nunkesser, and Hall. For example, the library uses
-64-bit hashes in order to facilitate large sets. Additionally, the bias
-correction (based on empirical research conducted by the paper's authors)
-is implemented in libcount.
+The author of the library is investigating whether there is substantial
+benefit to sparse storage for normal use cases. Since the worst case
+usage is approximately 256Kb, in light of today's typical memory
+configurations, it is not a priority.
+
+This library has not been thoroughly reviewed or tested at this time.
 
 Both C and C++ interfaces are available. The examples below demonstrate use.
 
@@ -61,7 +60,7 @@ int main(int argc, char* argv[]) {
   }
 
   // Obtain the cardinality estimate.
-  uint64_t estimate = hll->EstimateCardinality();
+  uint64_t estimate = hll->Estimate();
 
   // Delete object.
   delete hll;
@@ -96,7 +95,7 @@ int main(int argc, char* argv[]) {
   }
 
   // Obtain the cardinality estimate.
-  uint64_t estimate = HLL_estimate_cardinality(hll);
+  uint64_t estimate = HLL_estimate(hll);
 
   // Free object
   HLL_free(hll);

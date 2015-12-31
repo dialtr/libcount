@@ -19,33 +19,16 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include "count/empirical_data.h"
 #include "count/utility.h"
 
 namespace {
 
-// The minimum and maximum allowed precision values.
-const int HLL_MIN_PRECISION = 4;
-const int HLL_MAX_PRECISION = 16;
-
 using libcount::CountLeadingZeroes;
 
-// Helper to return the appropriate alpha value used to scale the raw estimate
-double GetAlphaForPrecision(int precision) {
-  assert(precision >= HLL_MIN_PRECISION);
-  assert(precision <= HLL_MAX_PRECISION);
-
-  // TODO(tdial): These magic constants were derived from empirical research
-  // by the authors of the HyperLogLog++ paper. Cite reference.
-  switch (precision) {
-    case 4:
-      return 0.673f;
-    case 5:
-      return 0.697f;
-    case 6:
-      return 0.709f;
-    default:
-      return (0.7213f / (1.0f + (1.079f / static_cast<double>(precision))));
-  }
+// Helper that calculates cardinality according to LinearCounting
+double LinearCounting(double register_count, double zeroed_registers) {
+  return register_count * log(register_count / zeroed_registers);
 }
 
 // Helper to calculate the index into the table of registers from the hash
@@ -111,7 +94,7 @@ void HLL::Update(uint64_t hash) {
   ++updates_;
 }
 
-uint64_t HLL::EstimateCardinality() const {
+double HLL::RawEstimate() const {
   // Let 'm' be the number of registers.
   const double m = static_cast<double>(register_count_);
 
@@ -129,15 +112,50 @@ uint64_t HLL::EstimateCardinality() const {
   const double harmonic_mean = m * (1.0 / sum);
   assert(harmonic_mean >= 0.0);
 
-  // The estimate is bias-corrected using a constant that depends on precision
-  const double scale_factor = m * GetAlphaForPrecision(precision_);
-  assert(scale_factor >= 0.0);
-
-  // Calculate the bias-corrected estimate
-  const double estimate = harmonic_mean * scale_factor;
+  // The harmonic mean is scaled by a constant that depends on the precision.
+  const double estimate = EMP_alpha(precision_) * m * harmonic_mean;
   assert(estimate >= 0.0);
 
-  return static_cast<uint64_t>(estimate);
+  return estimate;
+}
+
+uint64_t HLL::Estimate() const {
+  // First, calculate the raw estimate per original HyperLogLog.
+  const double E = RawEstimate();
+
+  // Determine the threshold under which we apply a bias correction.
+  const double BiasThreshold = 5 * register_count_;
+
+  // Calculate E', the bias corrected estimate.
+  const double EP = (E < BiasThreshold) ? (E - EMP_bias(E, precision_)) : E;
+
+  // The number of zerored registers decides whether we use LinearCounting.
+  const int V = RegistersEqualToZero();
+
+  // H is either the LinearCounting estimate or the bias-corrected estimate.
+  double H = 0.0;
+  if (V != 0) {
+    H = LinearCounting(register_count_, V);
+  } else {
+    H = EP;
+  }
+
+  // Under an empirically-determined threshold we return H, otherwise E'.
+  if (H < EMP_threshold(precision_)) {
+    return H;
+  } else {
+    return EP;
+  }
+}
+
+int HLL::RegistersEqualToZero() const {
+  int zeroed_registers = 0;
+  for (int i = 0; i < register_count_; ++i) {
+    if (registers_[i] == 0) {
+      ++zeroed_registers;
+    }
+  }
+  return zeroed_registers;
 }
 
 }  // namespace libcount

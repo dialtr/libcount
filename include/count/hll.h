@@ -17,6 +17,7 @@
 #define INCLUDE_COUNT_HLL_H_
 
 #include <stdint.h>
+#include "count/hll_limits.h"
 
 namespace libcount {
 
@@ -36,8 +37,11 @@ class HLL {
   // cryptographic hash function such as SHA1, is a good choice.
   void Update(uint64_t hash);
 
-  // Return an estimate of the cardinality.
-  uint64_t EstimateCardinality() const;
+  // Return the raw estimate based on the HyperLogLog algorithm.
+  double RawEstimate() const;
+
+  // Return the bias-corrected estimate, following the HyperLogLog++ algorithm.
+  uint64_t Estimate() const;
 
  private:
   int precision_;
@@ -47,6 +51,9 @@ class HLL {
 
   // Constructor private: we vet out the precision in the Create function.
   explicit HLL(int precision);
+
+  // Return the number of registers equal to zero; used in LinearCounting.
+  int RegistersEqualToZero() const;
 
   // No copying allowed
   HLL(const HLL& no_copy);

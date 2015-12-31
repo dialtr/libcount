@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
   const int kStringLen = 5;
 
   // Initialize a HyperLogLog context structure.
-  const int kPrecision = 8;
+  const int kPrecision = 11;
   int error = 0;
   hll_t* ctx = HLL_create(kPrecision, &error);
   if (!ctx) {
@@ -102,9 +102,9 @@ int main(int argc, char* argv[]) {
     (pow(26.0f, static_cast<double>(kStringLen))));
 
   // Get an estimate of the cardinality using the library
-  uint64_t estimate = HLL_estimate_cardinality(ctx);
+  uint64_t estimate = HLL_estimate(ctx);
 
-  uint64_t estimate_cpp = hll->EstimateCardinality();
+  uint64_t estimate_cpp = hll->Estimate();
 
   cerr << endl
        << "cardinality upper bound:  " << upper_bound << endl

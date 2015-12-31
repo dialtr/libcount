@@ -14,38 +14,29 @@
    contributors.
 */
 
-#ifndef INCLUDE_COUNT_C_H_
-#define INCLUDE_COUNT_C_H_
+#ifndef COUNT_EMPIRICAL_DATA_H_
+#define COUNT_EMPIRICAL_DATA_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdint.h>
+extern const double THRESHOLD_DATA[19];
+extern const double RAW_ESTIMATE_DATA[15][201];
+extern const double BIAS_DATA[15][201];
 
-/* Exported types */
+// Return the empirical alpha value used for scaling harmonic means.
+extern double EMP_alpha(int precision);
 
-typedef struct hll_t hll_t;
+// Return the empirical cardinality threshold for the given precision value.
+// Valid values for precision are [4..18] inclusive.
+extern double EMP_threshold(int precision);
 
-/* HLL Operations */
-
-/* Create a HyperLogLog context object to estimate the cardinality of a set. */
-extern hll_t* HLL_create(int precision, int* opt_error);
-
-/* Update a context to record an element of the set. */
-extern void HLL_update(hll_t* ctx, uint64_t hash);
-
-/* Return the raw estimate of the cardinality of the set. */
-double HLL_raw_estimate(hll_t* ctx);
-
-/* Return an estimate of the cardinality of the set, following HyperLogLog++ */
-extern uint64_t HLL_estimate(hll_t* ctx);
-
-/* Free resources associated with a context. */
-extern void HLL_free(hll_t* ctx);
+// Return the empirical bias value for the raw estimate and precision.
+extern double EMP_bias(double raw_estimate, int precision);
 
 #ifdef __cplusplus
 } /* end extern "C" */
 #endif
 
-#endif /* INCLUDE_COUNT_C_H_ */
+#endif  /* COUNT_EMPIRICAL_DATA_H_ */
