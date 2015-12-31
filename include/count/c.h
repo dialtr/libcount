@@ -22,6 +22,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include "count/hll_limits.h"
 
 /* Exported types */
 

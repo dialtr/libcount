@@ -66,11 +66,11 @@ int main(int argc, char* argv[]) {
   // where each string is comprised of uppercase letters from the alpahbet.
   // Thus, for kStringLen = 4, there should be approximately 1/2 million
   // unique values in the population of kIterations elements.
-  const int kIterations = 100000000;
-  const int kStringLen = 5;
+  const int kIterations = 1000000000;
+  const int kStringLen = 4;
 
   // Initialize a HyperLogLog context structure.
-  const int kPrecision = 11;
+  const int kPrecision = 14;
   int error = 0;
   hll_t* ctx = HLL_create(kPrecision, &error);
   if (!ctx) {
