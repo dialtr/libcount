@@ -66,11 +66,11 @@ int main(int argc, char* argv[]) {
   // where each string is comprised of uppercase letters from the alpahbet.
   // Thus, for kStringLen = 4, there should be approximately 1/2 million
   // unique values in the population of kIterations elements.
-  const int kIterations = 1000000000;
-  const int kStringLen = 4;
+  const int kIterations = 100000000;
+  const int kStringLen = 3;
 
   // Initialize a HyperLogLog context structure.
-  const int kPrecision = 14;
+  const int kPrecision = 17;
   int error = 0;
   hll_t* ctx = HLL_create(kPrecision, &error);
   if (!ctx) {
@@ -102,14 +102,14 @@ int main(int argc, char* argv[]) {
     (pow(26.0f, static_cast<double>(kStringLen))));
 
   // Get an estimate of the cardinality using the library
-  uint64_t estimate = HLL_estimate(ctx);
-
   uint64_t estimate_cpp = hll->Estimate();
 
+  double raw_estimate = HLL_raw_estimate(ctx);
+
   cerr << endl
-       << "cardinality upper bound:  " << upper_bound << endl
-       << "cardinality estimate:     " << estimate << endl
-       << "C++ cardinality estimate: " << estimate_cpp << endl;
+       << "cardinality upper bound: " << upper_bound << endl
+       << "raw estimate:            " << raw_estimate << endl
+       << "bias-corrected estimate: " << estimate_cpp << endl;
 
   // Free the context structure.
   HLL_free(ctx);
