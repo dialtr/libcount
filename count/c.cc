@@ -56,9 +56,19 @@ void HLL_update(hll_t* ctx, uint64_t hash) {
   ctx->rep->Update(hash);
 }
 
-uint64_t HLL_estimate_cardinality(hll_t* ctx) {
+uint64_t HLL_raw_estimate(hll_t* ctx) {
   assert(ctx != NULL);
-  return ctx->rep->EstimateCardinality();
+  return ctx->rep->RawEstimate();
+}
+
+uint64_t HLL_linear_counting_estimate(hll_t* ctx) {
+  assert(ctx != NULL);
+  return ctx->rep->LinearCountingEstimate();
+}
+
+uint64_t HLL_estimate(hll_t* ctx) {
+  assert(ctx != NULL);
+  return ctx->rep->Estimate();
 }
 
 void HLL_free(hll_t* ctx) {

@@ -111,7 +111,7 @@ void HLL::Update(uint64_t hash) {
   ++updates_;
 }
 
-uint64_t HLL::EstimateCardinality() const {
+uint64_t HLL::RawEstimate() const {
   // Let 'm' be the number of registers.
   const double m = static_cast<double>(register_count_);
 
@@ -129,15 +129,21 @@ uint64_t HLL::EstimateCardinality() const {
   const double harmonic_mean = m * (1.0 / sum);
   assert(harmonic_mean >= 0.0);
 
-  // The estimate is bias-corrected using a constant that depends on precision
-  const double scale_factor = m * GetAlphaForPrecision(precision_);
-  assert(scale_factor >= 0.0);
-
-  // Calculate the bias-corrected estimate
-  const double estimate = harmonic_mean * scale_factor;
+  // The harmonic mean is scaled by a constant that depends on the precision.
+  const double estimate = GetAlphaForPrecision(precision_) * m * harmonic_mean;
   assert(estimate >= 0.0);
 
   return static_cast<uint64_t>(estimate);
+}
+
+uint64_t HLL::LinearCountingEstimate() const {
+  // TODO(tdial): Implement
+  return RawEstimate();
+}
+
+uint64_t HLL::Estimate() const {
+  // TODO(tdial): Implement
+  return RawEstimate();
 }
 
 }  // namespace libcount

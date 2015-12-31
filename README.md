@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
   }
 
   // Obtain the cardinality estimate.
-  uint64_t estimate = hll->EstimateCardinality();
+  uint64_t estimate = hll->Estimate();
 
   // Delete object.
   delete hll;
@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
   }
 
   // Obtain the cardinality estimate.
-  uint64_t estimate = HLL_estimate_cardinality(hll);
+  uint64_t estimate = HLL_estimate(hll);
 
   // Free object
   HLL_free(hll);

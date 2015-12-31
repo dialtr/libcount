@@ -36,8 +36,14 @@ class HLL {
   // cryptographic hash function such as SHA1, is a good choice.
   void Update(uint64_t hash);
 
-  // Return an estimate of the cardinality.
-  uint64_t EstimateCardinality() const;
+  // Return the raw estimate based on the HyperLogLog algorithm.
+  uint64_t RawEstimate() const;
+
+  // Return the estimate according to the LinearCounting algorithm.
+  uint64_t LinearCountingEstimate() const;
+
+  // Return the bias-corrected estimate, following the HyperLogLog++ algorithm.
+  uint64_t Estimate() const;
 
  private:
   int precision_;

@@ -29,14 +29,20 @@ typedef struct hll_t hll_t;
 
 /* HLL Operations */
 
-/* Create a HyperLogLog context object to estimate cardinality. */
+/* Create a HyperLogLog context object to estimate the cardinality of a set. */
 extern hll_t* HLL_create(int precision, int* opt_error);
 
-/* Update a context to record an element of the set being counted. */
+/* Update a context to record an element of the set. */
 extern void HLL_update(hll_t* ctx, uint64_t hash);
 
-/* Return an estimate of the cardinality of the set being counted. */
-extern uint64_t HLL_estimate_cardinality(hll_t* ctx);
+/* Return the raw estimate of the cardinality of the set. */
+extern uint64_t HLL_raw_estimate(hll_t* ctx);
+
+/* Return the LinearCounting estimate of the cardinality of the set. */
+extern uint64_t HLL_linear_counting_estimate(hll_t* ctx);
+
+/* Return an estimate of the cardinality of the set, following HyperLogLog++ */
+extern uint64_t HLL_estimate(hll_t* ctx);
 
 /* Free resources associated with a context. */
 extern void HLL_free(hll_t* ctx);
