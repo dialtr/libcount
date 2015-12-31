@@ -171,7 +171,7 @@ uint64_t HLL::Estimate() const {
 
   // The number of zerored registers decides whether we use LinearCounting.
   const int V = RegistersEqualToZero();
-  
+
   // H is either the LinearCounting estimate or the bias-corrected estimate.
   double H = 0.0;
   if (V != 0) {
@@ -180,7 +180,7 @@ uint64_t HLL::Estimate() const {
     H = EPrime;
   }
 
-  // Under an empirically-determined thresholdm we return H, otherwise E'.
+  // Under an empirically-determined threshold we return H, otherwise E'.
   if (H < Threshold(precision_)) {
     return H;
   } else {
