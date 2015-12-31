@@ -59,30 +59,31 @@ double EMP_bias(double raw_estimate, int precision) {
   // Aliases for the tables we're interested in.
   const double* const estimates = RAW_ESTIMATE_DATA[index];
   const double* const biases = BIAS_DATA[index];
-  
+
   // The estimate arrays for a given precision do not all contain the same
   // number of items. The largest contains 200, and those that contain
   // fewer are padded with zeroes at the end.
   const int LARGEST_INDEX = 200;
-  
+
   // Since not all arrays contain the same number of elements, we need to find
   // the maximum element, which is always the last one in the array. The
   // result is pointer tha we can use as an interator in std::lower_bound().
   // We add one to produce a value that points to the end of the range.
-  const double* max = std::max_element(estimates, estimates + LARGEST_INDEX) + 1;
+  const double* max =
+      std::max_element(estimates, estimates + LARGEST_INDEX) + 1;
   assert(max > estimates);
 
   // The std::lower_bound() function returns the first element that is NOT
   // less than the search element.
   const double* iter = std::lower_bound(estimates, max, raw_estimate);
-  
+
   // Find the index of the element immediately less than raw_element.
-  const size_t left_index = 
-    (iter > estimates) ? (iter - estimates - 1) : (iter - estimates);
-  
+  const size_t left_index =
+      (iter > estimates) ? (iter - estimates - 1) : (iter - estimates);
+
   // Find the index of the element immediately greater than the raw_element.
-  const size_t right_index = 
-   (iter < max) ? (iter - estimates) : (iter - estimates - 1); 
+  const size_t right_index =
+      (iter < max) ? (iter - estimates) : (iter - estimates - 1);
 
   // The Heule, Nunkesser, and Hall paper describes using k-NN interpolation
   // to calculate a bias value for a given raw estimate. However, they also
@@ -94,13 +95,13 @@ double EMP_bias(double raw_estimate, int precision) {
   const double left_estimate = estimates[left_index];
   const double right_estimate = estimates[right_index];
   const double estimate_range = right_estimate - left_estimate;
-  
+
   // Next, find the relative position (scaler value) of the raw estimate
   // over that range, normalizing the value to be 0 <= scaler <= 1.
   // We take care to avoid division by zero here by ensuring the denominator
   // is greater than an arbitrarily chosen delta value. If it is less than
   // that, we will just nudge to zero since the raw_estimate would by
-  // definition be within delta % of left_estimate anyway. 
+  // definition be within delta % of left_estimate anyway.
   const double delta = 0.0000001;
   double scaler = 0.0;
   if (estimate_range > delta) {
