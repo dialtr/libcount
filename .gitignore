@@ -2,7 +2,8 @@
 build_config.mk
 
 # Ignore build targets
-demo
+c_example
+cc_example
 libcount.a
 
 # Ignore object files

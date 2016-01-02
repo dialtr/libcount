@@ -37,6 +37,14 @@ Below are two minimal examples that demonstrate using the C++ and C APIs,
 respectively. More realistic examples that employ a high quality hash
 algorithm can be found in the examples/ directory at the root of the repo.
 
+To build the examples, simply:
+
+    make examples
+
+They are not built by default because they depend on the OpenSSL libraries
+being available on the system, and since those libraries are not installed
+by default on many systems, building them is "opt-in." 
+
 ### C++
 ```C++
 #include <count/hll.h>
