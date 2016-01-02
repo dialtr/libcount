@@ -5,6 +5,7 @@ build_config.mk
 c_example
 cc_example
 libcount.a
+merge_example
 
 # Ignore object files
 *.o

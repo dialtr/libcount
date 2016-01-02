@@ -56,6 +56,12 @@ void HLL_update(hll_t* ctx, uint64_t hash) {
   ctx->rep->Update(hash);
 }
 
+int HLL_merge(hll_t* dest, hll_t* src) {
+  assert(dest != NULL);
+  assert(src != NULL);
+  return dest->rep->Merge(src->rep);
+}
+
 double HLL_raw_estimate(hll_t* ctx) {
   assert(ctx != NULL);
   return ctx->rep->RawEstimate();

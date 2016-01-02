@@ -36,6 +36,9 @@ extern hll_t* HLL_create(int precision, int* opt_error);
 /* Update a context to record an element of the set. */
 extern void HLL_update(hll_t* ctx, uint64_t hash);
 
+/* Merge 'src' context with 'dest', storing the resulting state in 'dest'. */
+extern int HLL_merge(hll_t* dest, hll_t* src);
+
 /* Return the raw estimate of the cardinality of the set. */
 double HLL_raw_estimate(hll_t* ctx);
 

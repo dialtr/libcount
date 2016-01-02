@@ -37,6 +37,11 @@ class HLL {
   // cryptographic hash function such as SHA1, is a good choice.
   void Update(uint64_t hash);
 
+  // Merge count tracking information from other instance into the object.
+  // The object being merged in must have been instantiated with the same
+  // precision. Returns 0 on success, EINVAL otherwise.
+  int Merge(HLL* other);
+
   // Return the raw estimate based on the HyperLogLog algorithm.
   double RawEstimate() const;
 
