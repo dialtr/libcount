@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
   const uint64_t kIterations = 1000000;
   const int kTrueCardinality = 100;
   for (int i = 0; i < kIterations; ++i) {
-    hll->Update(hash(i % 100));
+    hll->Update(hash(i % kTrueCardinality));
   }
 
   // Obtain the cardinality estimate.

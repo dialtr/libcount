@@ -19,12 +19,14 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <algorithm>
 #include "count/empirical_data.h"
 #include "count/utility.h"
 
 namespace {
 
 using libcount::CountLeadingZeroes;
+using std::max;
 
 // Helper that calculates cardinality according to LinearCounting
 double LinearCounting(double register_count, double zeroed_registers) {
@@ -92,6 +94,22 @@ void HLL::Update(uint64_t hash) {
   // Record update count.
   // TODO(tdial): Provide an API to return this value.
   ++updates_;
+}
+
+int HLL::Merge(HLL* other) {
+  // Ensure that the precision values of the two objects match.
+  assert(other != NULL);
+  if (precision_ != other->precision_) {
+    return EINVAL;
+  }
+
+  // Choose the maximum of corresponding registers from self, other and
+  // store it back in self, effectively merging the state of the counters.
+  for (int i = 0; i < register_count_; ++i) {
+    registers_[i] = max(registers_[i], other->registers_[i]);
+  }
+
+  return 0;
 }
 
 double HLL::RawEstimate() const {
