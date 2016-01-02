@@ -33,6 +33,10 @@ This library is currently in ALPHA.
 
 ## Minimal Examples
 
+Below are two minimal examples that demonstrate using the C++ and C APIs,
+respectively. More realistic examples that employ a high quality hash
+algorithm can be found in the examples/ directory at the root of the repo.
+
 ### C++
 ```C++
 #include <count/hll.h>
@@ -111,7 +115,7 @@ Please see AUTHORS in the root of the repository for contact information.
 The libcount.a library has no dependencies outside of the standard C/C++
 libraries. Maintaining this property is a design goal.
 
-The demo program currently requires OpenSSL due to its use of the SHA1
+The examples currently require OpenSSL due to their use of the SHA1
 hash functions. Future unit tests will also likely require this library.
 
 ## Future Planned Development

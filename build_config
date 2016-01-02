@@ -37,6 +37,11 @@ if test -z "$CXX"; then
   CXX=g++
 fi
 
+# Same as above for CC
+if test -z "$CC"; then
+  CC=gcc
+fi
+
 # Test to see if the caller specified a lint tool; if not, we'll 
 # attempt to default to cpplint.py, but if that isn't present on
 # the system, we'll use 'fakelint', a do-nothing stub that lives
@@ -101,6 +106,7 @@ CPPLINT_SOURCES="$LINT_INCLUDE $LINT_COUNT "
 # Emit configuration variables
 echo "COUNT_FILES=$COUNT_FILES" >> $OUTPUT
 echo "CPPLINT_SOURCES=$CPPLINT_SOURCES" >> $OUTPUT
+echo "CC=$CC" >> $OUTPUT
 echo "CXX=$CXX" >> $OUTPUT
 echo "LINT_TOOL=$LINT_TOOL" >> $OUTPUT
 echo "PLATFORM=$PLATFORM" >> $OUTPUT
