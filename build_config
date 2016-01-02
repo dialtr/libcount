@@ -101,7 +101,10 @@ LINT_INCLUDE=`find $PREFIX/include/count -name '*.h' \
 LINT_COUNT=`find $PREFIX/count -name '*.cc' \
   -print | sort | sed "s,^$PREFIX/,," | tr "\n" " "`
 
-CPPLINT_SOURCES="$LINT_INCLUDE $LINT_COUNT "
+LINT_EXAMPLES=`find $PREFIX/examples -name '*.cc' \
+  -print | sort | sed "s,^$PREFIX/,," | tr "\n" " "`
+
+CPPLINT_SOURCES="$LINT_INCLUDE $LINT_COUNT $LINT_EXAMPLES "
 
 # Emit configuration variables
 echo "COUNT_FILES=$COUNT_FILES" >> $OUTPUT

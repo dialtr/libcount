@@ -1,3 +1,18 @@
+// Copyright 2015 The libcount Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License. See the AUTHORS file for names of
+// contributors.
+
 #include <inttypes.h>
 #include <openssl/sha.h>
 #include <stdio.h>
@@ -9,7 +24,7 @@ uint64_t hash(int i) {
   // Structure that is 160 bits wide used to extract 64 bits from a SHA-1.
   struct hashval {
     uint64_t high64;
-    char     low96;
+    char low96;
   } hash;
 
   // Calculate the SHA-1 hash of the integer.
@@ -34,8 +49,8 @@ int main(int argc, char* argv[]) {
   // the merge operation, we can expect the estimated cardinality to be about
   // double the value of 'kTrueCardinality'.
   const uint64_t kIterations = 10000000;
-  const int kTrueCardinality = 1000;
-  for (int i = 0; i < kIterations; ++i) {
+  const uint64_t kTrueCardinality = 1000;
+  for (uint64_t i = 0; i < kIterations; ++i) {
     hll_1->Update(hash(i % kTrueCardinality));
     hll_2->Update(hash((i % kTrueCardinality) + kTrueCardinality));
   }
@@ -47,7 +62,7 @@ int main(int argc, char* argv[]) {
   const uint64_t estimate = hll_1->Estimate();
 
   // Display results.
-  printf("actual cardinality:    %d\n", kTrueCardinality * 2);
+  printf("actual cardinality:    %" PRIuFAST64 "\n", kTrueCardinality * 2);
   printf("estimated cardinality: %" PRIuFAST64 "\n", estimate);
 
   // Delete object.
