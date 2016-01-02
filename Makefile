@@ -52,7 +52,7 @@ check: $(TESTS)
 
 .PHONY:
 clean:
-	-rm -f */*.o build_config.mk *.a $(TESTS)
+	-rm -f */*.o build_config.mk *.a demo $(TESTS)
 
 demo: dev/demo.o libcount.a
 	$(CXX) $(CXXFLAGS) dev/demo.o libcount.a -o $@ -lcrypto
