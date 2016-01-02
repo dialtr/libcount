@@ -52,10 +52,16 @@ check: $(TESTS)
 
 .PHONY:
 clean:
-	-rm -f */*.o build_config.mk *.a demo $(TESTS)
+	-rm -f */*.o build_config.mk *.a c_example cc_example $(TESTS)
 
-demo: dev/demo.o libcount.a
-	$(CXX) $(CXXFLAGS) dev/demo.o libcount.a -o $@ -lcrypto
+c_example: examples/c_example.o libcount.a
+	$(CXX) $(CXXFLAGS) examples/c_example.o libcount.a -o $@ -lcrypto
+
+cc_example: examples/cc_example.o libcount.a
+	$(CXX) $(CXXFLAGS) examples/cc_example.o libcount.a -o $@ -lcrypto
+
+.PHONY:
+examples: c_example cc_example
 
 .PHONY: install
 install: libcount.a
@@ -86,6 +92,9 @@ reformat:
 # TODO(tdial): Add unit test targets
 
 # Suffix Rules
+.c.o:
+	$(CC) $(CXXFLAGS) -c $< -o $@
+
 .cc.o:
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 

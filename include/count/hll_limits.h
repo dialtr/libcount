@@ -18,7 +18,7 @@
 #ifndef INCLUDE_COUNT_HLL_LIMITS_H_
 #define INCLUDE_COUNT_HLL_LIMITS_H_
 
-#ifndef __cplusplus
+#ifdef __cplusplus
 namespace libcount {
 #endif
 
@@ -28,7 +28,7 @@ enum {
   HLL_MAX_PRECISION = 18
 };
 
-#ifndef __cplusplus
+#ifdef __cplusplus
 }  // namespace libcount
 #endif
 
