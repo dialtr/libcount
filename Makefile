@@ -55,7 +55,7 @@ clean:
 	-rm -f */*.o build_config.mk *.a c_example cc_example $(TESTS)
 
 c_example: examples/c_example.o libcount.a
-	$(CXX) $(CXXFLAGS) examples/c_example.o libcount.a -o $@ -lcrypto
+	$(CC) $(CXXFLAGS) examples/c_example.o libcount.a -o $@ -lcrypto
 
 cc_example: examples/cc_example.o libcount.a
 	$(CXX) $(CXXFLAGS) examples/cc_example.o libcount.a -o $@ -lcrypto
