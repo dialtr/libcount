@@ -26,10 +26,10 @@ This library is currently in ALPHA.
 
 ## Building
 
-     git clone https://github.com/dialtr/libcount
-     cd libcount
-     make
-     sudo make install
+    git clone https://github.com/dialtr/libcount
+    cd libcount
+    make
+    sudo make install
 
 ## Minimal Examples
 
