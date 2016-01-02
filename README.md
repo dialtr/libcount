@@ -128,6 +128,5 @@ hash functions. Future unit tests will also likely require this library.
 
 ## Future Planned Development
 
-* Additional APIs to support parallelization
 * Optimizations
 * Sparse "register" storage
