@@ -64,7 +64,7 @@ merge_example: examples/merge_example.o libcount.a
 	$(CXX) $(CXXFLAGS) examples/merge_example.o libcount.a -o $@ -lcrypto
 
 .PHONY:
-examples: c_example cc_example merge_example
+examples: c_example 
 
 .PHONY: install
 install: libcount.a
