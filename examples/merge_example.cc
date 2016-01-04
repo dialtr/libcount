@@ -15,10 +15,12 @@
 
 #include <inttypes.h>
 #include <openssl/sha.h>
-#include <stdio.h>
+#include <iostream>
 #include "count/hll.h"
 
 using libcount::HLL;
+using std::cout;
+using std::endl;
 
 uint64_t hash(int i) {
   // Structure that is 160 bits wide used to extract 64 bits from a SHA-1.
@@ -62,8 +64,8 @@ int main(int argc, char* argv[]) {
   const uint64_t estimate = hll_1->Estimate();
 
   // Display results.
-  printf("actual cardinality:    %" PRIuFAST64 "\n", kTrueCardinality * 2);
-  printf("estimated cardinality: %" PRIuFAST64 "\n", estimate);
+  cout << "actual cardinality:    " << kTrueCardinality << endl;
+  cout << "estimated cardinality: " << estimate << endl;
 
   // Delete object.
   delete hll_2;
