@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
   const uint64_t estimate = hll_1->Estimate();
 
   // Display results.
-  cout << "actual cardinality:    " << kTrueCardinality << endl;
+  cout << "actual cardinality:    " << (kTrueCardinality * 2) << endl;
   cout << "estimated cardinality: " << estimate << endl;
 
   // Delete object.
