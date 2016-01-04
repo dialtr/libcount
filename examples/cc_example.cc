@@ -26,7 +26,7 @@ uint64_t hash(int i) {
   // Structure that is 160 bits wide used to extract 64 bits from a SHA-1.
   struct hashval {
     uint64_t high64;
-    char low96;
+    char low96[12];
   } hash;
 
   // Calculate the SHA-1 hash of the integer.
