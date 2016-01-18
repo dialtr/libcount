@@ -41,7 +41,7 @@ AR = ar
 RANLIB = ranlib
 CXXFLAGS += -I. -I./include $(PLATFORM_CXXFLAGS) $(OPT) $(WARNINGFLAGS)
 COUNT_OBJECTS = $(COUNT_FILES:.cc=.o)
-TESTS = empirical_data_test
+TESTS = nearest_neighbor_test
 
 # Targets
 all: libcount.a
@@ -52,7 +52,7 @@ check: $(TESTS)
 
 .PHONY:
 clean:
-	-rm -f */*.o build_config.mk *.a c_example cc_example $(TESTS)
+	-rm -f */*.o build_config.mk *.a c_example cc_example merge_example $(TESTS)
 
 c_example: examples/c_example.o libcount.a
 	$(CXX) $(CXXFLAGS) examples/c_example.o libcount.a -o $@ -lcrypto
@@ -63,8 +63,8 @@ cc_example: examples/cc_example.o libcount.a
 merge_example: examples/merge_example.o libcount.a
 	$(CXX) $(CXXFLAGS) examples/merge_example.o libcount.a -o $@ -lcrypto
 
-empirical_data_test: count/empirical_data_test.o libcount.a
-	$(CXX) $(CXXFLAGS) count/empirical_data_test.o libcount.a -o $@
+nearest_neighbor_test: count/nearest_neighbor_test.o libcount.a
+	$(CXX) $(CXXFLAGS) count/nearest_neighbor_test.o libcount.a -o $@
 
 .PHONY:
 examples: c_example cc_example merge_example

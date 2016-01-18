@@ -143,7 +143,7 @@ uint64_t HLL::Estimate() const {
   // Calculate E', the bias corrected estimate.
   const double EP = (E < BiasThreshold) ? (E - EMP_bias(E, precision_)) : E;
 
-  // The number of zerored registers decides whether we use LinearCounting.
+  // The number of zeroed registers decides whether we use LinearCounting.
   const int V = RegistersEqualToZero();
 
   // H is either the LinearCounting estimate or the bias-corrected estimate.

@@ -23,7 +23,7 @@ extern const double BIAS_DATA[15][201];
 // Return the empirical alpha value used for scaling harmonic means.
 extern double EMP_alpha(int precision);
 
-// Return the empirical cardinality threshold for the given precision value.
+// Return the cardinality threshold for the given precision value.
 // Valid values for precision are [4..18] inclusive.
 extern double EMP_threshold(int precision);
 
