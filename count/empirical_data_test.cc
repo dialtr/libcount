@@ -38,12 +38,12 @@ int EstimateDataIncreases() {
   // would imply that for a raw estimoate of 2.75, there are two possible
   // interpolation points.
 
-  // The estimate arrays are terminated by zeroes. Since there are 
+  // The estimate arrays are terminated by zeroes. Since there are
   // varying numbers of elements in the tables associated with each
   // precision, we must detect the end of the array by comparing its
   // value to zero. We do so using a special floating point comparator
   // defined above, since it is not really safe to compare floats
-  // for equality otherwise. 
+  // for equality otherwise.
   const double EPSILON = 0.0001;
 
   // We'll track the number of errors that we encounter and write the
@@ -52,7 +52,7 @@ int EstimateDataIncreases() {
   size_t error_count = 0;
 
   // There are a total of fifteen arrays (one for each precision value
-  // from precision 4..18 inclusive. 
+  // from precision 4..18 inclusive.
   const size_t TABLE_COUNT = 15;
 
   // The tables may contain at most 201 usable values. However, the
@@ -72,12 +72,14 @@ int EstimateDataIncreases() {
 
       // Did the lhs, rhs values we're examining violate the condition?
       if (lhs >= rhs) {
-        fprintf(stderr,
-          "ERROR: lhs >= rhs: In the raw estimate table for precision %lu: \n"
-          "  Value at index %lu was: %lf\n"
-          "  Value at index %lu was: %lf\n\n",
-          table + 4, index, estimates[index], index + 1, estimates[index + 1]);
-  
+        fprintf(
+            stderr,
+            "ERROR: lhs >= rhs: In the raw estimate table for precision %lu: \n"
+            "  Value at index %lu was: %lf\n"
+            "  Value at index %lu was: %lf\n\n",
+            table + 4, index, estimates[index], index + 1,
+            estimates[index + 1]);
+
         ++error_count;
       }
     }
