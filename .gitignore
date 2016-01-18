@@ -6,6 +6,7 @@ c_example
 cc_example
 libcount.a
 merge_example
+*_test
 
 # Ignore object files
 *.o

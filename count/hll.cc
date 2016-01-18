@@ -53,7 +53,7 @@ inline uint8_t ZeroCountOf(uint64_t hash, int precision) {
 namespace libcount {
 
 HLL::HLL(int precision)
-    : precision_(precision), updates_(0), register_count_(0), registers_(NULL) {
+    : precision_(precision), register_count_(0), registers_(NULL) {
   // The precision is vetted by the Create() function.  Assertions nonetheless.
   assert(precision >= HLL_MIN_PRECISION);
   assert(precision <= HLL_MAX_PRECISION);
@@ -90,10 +90,6 @@ void HLL::Update(uint64_t hash) {
   if (count > registers_[index]) {
     registers_[index] = count;
   }
-
-  // Record update count.
-  // TODO(tdial): Provide an API to return this value.
-  ++updates_;
 }
 
 int HLL::Merge(HLL* other) {
@@ -147,7 +143,7 @@ uint64_t HLL::Estimate() const {
   // Calculate E', the bias corrected estimate.
   const double EP = (E < BiasThreshold) ? (E - EMP_bias(E, precision_)) : E;
 
-  // The number of zerored registers decides whether we use LinearCounting.
+  // The number of zeroed registers decides whether we use LinearCounting.
   const int V = RegistersEqualToZero();
 
   // H is either the LinearCounting estimate or the bias-corrected estimate.

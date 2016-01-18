@@ -1,31 +1,51 @@
-/*
-   Copyright 2015 The libcount Authors.
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License. See the AUTHORS file for names of
-   contributors.
-*/
+//
+// Copyright 2015 The libcount Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License. See the AUTHORS file for names of
+// contributors.
 
 #include "count/empirical_data.h"
 #include <assert.h>
 #include <stdio.h>
 #include <algorithm>
+#include <vector>
 #include "count/hll_limits.h"
+#include "count/nearest_neighbor.h"
+#include "count/utility.h"
+
+namespace {
+
+// The empirical bias tables contain varying numbers of entries, depending
+// on the precision level. Unused table entries (occuring at the end of the
+// arrays) are zero filled. This function returns the actual number of
+// valid elements in the array.
+int ValidTableEntries(const double* array, int size) {
+  const double EPSILON = 0.0001;
+  for (int i = 0; i < size; ++i) {
+    if (libcount::IsDoubleEqual(array[i], 0.0, EPSILON)) {
+      return i;
+    }
+  }
+  return size;
+}
+
+}  // namespace
 
 using libcount::HLL_MIN_PRECISION;
 using libcount::HLL_MAX_PRECISION;
+using libcount::NearestNeighbors;
 
 double EMP_alpha(int precision) {
-  // TODO(tdial): This could also be a table lookup.
   assert(precision >= HLL_MIN_PRECISION);
   assert(precision <= HLL_MAX_PRECISION);
   switch (precision) {
@@ -56,68 +76,45 @@ double EMP_bias(double raw_estimate, int precision) {
     return 0.0;
   }
 
-  // The table of values starts with precision 4, which is at index zero.
-  const int index = precision - HLL_MIN_PRECISION;
+  // There are separate raw estimate range and bias tables for each precision
+  // level. The table starts at precision 4, which is at index 0.
+  const int index = (precision - HLL_MIN_PRECISION);
 
-  // Aliases for the tables we're interested in.
+  // Make aliases for the estimate, bias arrays we're interested in.
   const double* const estimates = RAW_ESTIMATE_DATA[index];
   const double* const biases = BIAS_DATA[index];
 
-  // The estimate arrays for a given precision do not all contain the same
-  // number of items. The largest contains 200, and those that contain
-  // fewer are padded with zeroes at the end.
-  const int LARGEST_INDEX = 200;
+  // There up to 201 data points in each table of raw estimates, but the
+  // number of points varies depending on the precision. Determine the
+  // actual number of valid entries in the table.
+  const int NUM_ENTRIES = ValidTableEntries(estimates, 201);
 
-  // Since not all arrays contain the same number of elements, we need to find
-  // the maximum element, which is always the last one in the array. The
-  // result is pointer tha we can use as an interator in std::lower_bound().
-  // We add one to produce a value that points to the end of the range.
-  const double* max =
-      std::max_element(estimates, estimates + LARGEST_INDEX) + 1;
-  assert(max > estimates);
+  // Find the indices of the two closest raw estimates in the table using
+  // nearest neighbor.
+  size_t neighbors[2] = {0};
+  const size_t neighbor_count =
+      NearestNeighbors(estimates, NUM_ENTRIES, raw_estimate, 2, neighbors);
+  assert(neighbor_count == 2);
 
-  // The std::lower_bound() function returns the first element that is NOT
-  // less than the search element.
-  const double* iter = std::lower_bound(estimates, max, raw_estimate);
+  // Use linear interpolation to find a bias value based on the two
+  // nearest neighbors found above.
 
-  // Find the index of the element immediately less than raw_element.
-  const size_t left_index =
-      (iter > estimates) ? (iter - estimates - 1) : (iter - estimates);
+  // Get values of left, right nearest neighbors
+  const double left_neighbor = estimates[neighbors[0]];
+  const double right_neighbor = estimates[neighbors[1]];
 
-  // Find the index of the element immediately greater than the raw_element.
-  const size_t right_index =
-      (iter < max) ? (iter - estimates) : (iter - estimates - 1);
+  // Compute range (difference between neighbors) and scale factor.
+  const double range = right_neighbor - left_neighbor;
+  const double scale = (raw_estimate - left_neighbor) / range;
 
-  // The Heule, Nunkesser, and Hall paper describes using k-NN interpolation
-  // to calculate a bias value for a given raw estimate. However, they also
-  // mention that linear interpolation would offer similar results. Since
-  // it is simpler, we opt for linear interpolation.
+  // Get values of corresponding left, right bias values.
+  const double left_bias = biases[neighbors[0]];
+  const double right_bias = biases[neighbors[1]];
 
-  // Begin by finding the left and right estimate that straddle the raw
-  // estimate. Then find the range over these estimates.
-  const double left_estimate = estimates[left_index];
-  const double right_estimate = estimates[right_index];
-  const double estimate_range = right_estimate - left_estimate;
-
-  // Next, find the relative position (scaler value) of the raw estimate
-  // over that range, normalizing the value to be 0 <= scaler <= 1.
-  // We take care to avoid division by zero here by ensuring the denominator
-  // is greater than an arbitrarily chosen delta value. If it is less than
-  // that, we will just nudge to zero since the raw_estimate would by
-  // definition be within delta % of left_estimate anyway.
-  const double delta = 0.0000001;
-  double scaler = 0.0;
-  if (estimate_range > delta) {
-    scaler = (raw_estimate - left_estimate) / estimate_range;
-  }
-
-  // Finally, determine the bias, using the scaler to find the interpolated
-  // value that lies at the same relative position between the left, right
-  // bias as the raw estimate did between the left, right estimate.
-  const double left_bias = biases[left_index];
-  const double right_bias = biases[right_index];
+  // Compute range of bias values and find interpolated value using
+  // the scale factor computed above.
   const double bias_range = right_bias - left_bias;
-  const double interpolated_bias = (scaler * bias_range) + left_bias;
+  const double interpolated_bias = (scale * bias_range) + left_bias;
 
   return interpolated_bias;
 }

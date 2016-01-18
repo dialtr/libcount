@@ -26,7 +26,7 @@ class HLL {
   virtual ~HLL();
 
   // Create an instance of a HyperLogLog cardinality estimator. Valid values
-  // for precision are [4..16] inclusive, and govern the precision of the
+  // for precision are [4..18] inclusive, and govern the precision of the
   // estimate. Returns NULL on failure. In the event of failure, the caller
   // may provide a pointer-to integer to learn the reason.
   static HLL* Create(int precision, int* error = 0);
@@ -42,15 +42,14 @@ class HLL {
   // precision. Returns 0 on success, EINVAL otherwise.
   int Merge(HLL* other);
 
-  // Return the raw estimate based on the HyperLogLog algorithm.
-  double RawEstimate() const;
-
-  // Return the bias-corrected estimate, following the HyperLogLog++ algorithm.
+  // Compute the bias-corrected estimate, following the HyperLogLog++ algorithm.
   uint64_t Estimate() const;
 
  private:
+  // Compute the raw estimate based on the HyperLogLog algorithm.
+  double RawEstimate() const;
+
   int precision_;
-  uint64_t updates_;
   int register_count_;
   uint8_t* registers_;
 

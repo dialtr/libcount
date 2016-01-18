@@ -1,0 +1,20 @@
+for t in empirical_data_test; do echo "** Running $t"; ./$t || exit 1; done
+** Running empirical_data_test
+ERROR: lhs >= rhs: In the raw estimate table for precision 5: 
+  Value at index 127 was: 128.346400
+  Value at index 128 was: 128.346200
+
+ERROR: lhs >= rhs: In the raw estimate table for precision 5: 
+  Value at index 130 was: 131.034200
+  Value at index 131 was: 131.004200
+
+ERROR: lhs >= rhs: In the raw estimate table for precision 6: 
+  Value at index 148 was: 238.197400
+  Value at index 149 was: 237.747400
+
+ERROR: lhs >= rhs: In the raw estimate table for precision 6: 
+  Value at index 167 was: 267.256600
+  Value at index 168 was: 267.162400
+
+Makefile:51: recipe for target 'check' failed
+make: *** [check] Error 1

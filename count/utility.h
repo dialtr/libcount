@@ -20,7 +20,14 @@
 
 namespace libcount {
 
+// Return the number of leading zero bits in the unsigned value.
+uint8_t CountLeadingZeroes(uint64_t value);
+
+// Equality test for doubles. Returns true if ((a - b) < epsilon).
+bool IsDoubleEqual(double a, double b, double epsilon);
+
 // If the destination pointer is valid, copy the source value to it.
+// Returns true if a value was copied. Returns false otherwise.
 template <typename Type>
 bool MaybeAssign(Type* dest, const Type& src) {
   if (dest) {
@@ -29,9 +36,6 @@ bool MaybeAssign(Type* dest, const Type& src) {
   }
   return false;
 }
-
-// Return the number of leading zero bits in the unsigned value.
-uint8_t CountLeadingZeroes(uint64_t value);
 
 }  // namespace libcount
 

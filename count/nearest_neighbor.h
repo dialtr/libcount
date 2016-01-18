@@ -13,48 +13,21 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#include "count/utility.h"
-#include <math.h>
+#ifndef COUNT_NEAREST_NEIGHBOR_H_
+#define COUNT_NEAREST_NEIGHBOR_H_
+
+#include <stdlib.h>
 
 namespace libcount {
 
-uint8_t CountLeadingZeroes(uint64_t x) {
-  uint64_t y = 0;
-  uint64_t n = 64;
-  y = x >> 32;
-  if (y != 0) {
-    n = n - 32;
-    x = y;
-  }
-  y = x >> 16;
-  if (y != 0) {
-    n = n - 16;
-    x = y;
-  }
-  y = x >> 8;
-  if (y != 0) {
-    n = n - 8;
-    x = y;
-  }
-  y = x >> 4;
-  if (y != 0) {
-    n = n - 4;
-    x = y;
-  }
-  y = x >> 2;
-  if (y != 0) {
-    n = n - 2;
-    x = y;
-  }
-  y = x >> 1;
-  if (y != 0) {
-    return static_cast<uint8_t>(n - 2);
-  }
-  return static_cast<uint8_t>(n - x);
-}
-
-bool IsDoubleEqual(double a, double b, double epsilon) {
-  return (fabs(a - b) < epsilon);
-}
+// Scan an array of doubles, populating the 'neighbor_indices' array with
+// at most N array indices of values closest in value to the probe value.
+// Returns the actual number of neighbors found, which may be smaller than
+// N if 'array_length' is smaller than N.
+size_t NearestNeighbors(const double* array, size_t array_length,
+                        const double probe_value, size_t N,
+                        size_t* neighbor_indices);
 
 }  // namespace libcount
+
+#endif  // COUNT_NEAREST_NEIGHBOR
