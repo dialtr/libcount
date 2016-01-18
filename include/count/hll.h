@@ -26,7 +26,7 @@ class HLL {
   virtual ~HLL();
 
   // Create an instance of a HyperLogLog cardinality estimator. Valid values
-  // for precision are [4..16] inclusive, and govern the precision of the
+  // for precision are [4..18] inclusive, and govern the precision of the
   // estimate. Returns NULL on failure. In the event of failure, the caller
   // may provide a pointer-to integer to learn the reason.
   static HLL* Create(int precision, int* error = 0);
