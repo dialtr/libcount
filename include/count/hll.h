@@ -42,13 +42,13 @@ class HLL {
   // precision. Returns 0 on success, EINVAL otherwise.
   int Merge(HLL* other);
 
-  // Return the raw estimate based on the HyperLogLog algorithm.
-  double RawEstimate() const;
-
-  // Return the bias-corrected estimate, following the HyperLogLog++ algorithm.
+  // Compute the bias-corrected estimate, following the HyperLogLog++ algorithm.
   uint64_t Estimate() const;
 
  private:
+  // Compute the raw estimate based on the HyperLogLog algorithm.
+  double RawEstimate() const;
+
   int precision_;
   uint64_t updates_;
   int register_count_;

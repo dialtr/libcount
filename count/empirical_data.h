@@ -1,25 +1,20 @@
-/* Copyright 2015 The libcount Authors.
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License. See the AUTHORS file for names of
-   contributors.
-*/
+// Copyright 2015 The libcount Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License. See the AUTHORS file for names of
+// contributors.
 
 #ifndef COUNT_EMPIRICAL_DATA_H_
 #define COUNT_EMPIRICAL_DATA_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 extern const double THRESHOLD_DATA[19];
 extern const double RAW_ESTIMATE_DATA[15][201];
@@ -35,8 +30,4 @@ extern double EMP_threshold(int precision);
 // Return the empirical bias value for the raw estimate and precision.
 extern double EMP_bias(double raw_estimate, int precision);
 
-#ifdef __cplusplus
-} /* end extern "C" */
-#endif
-
-#endif  /* COUNT_EMPIRICAL_DATA_H_ */
+#endif  // COUNT_EMPIRICAL_DATA_H_

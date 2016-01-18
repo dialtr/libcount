@@ -41,7 +41,7 @@ AR = ar
 RANLIB = ranlib
 CXXFLAGS += -I. -I./include $(PLATFORM_CXXFLAGS) $(OPT) $(WARNINGFLAGS)
 COUNT_OBJECTS = $(COUNT_FILES:.cc=.o)
-TESTS = 
+TESTS = empirical_data_test
 
 # Targets
 all: libcount.a
@@ -62,6 +62,9 @@ cc_example: examples/cc_example.o libcount.a
 
 merge_example: examples/merge_example.o libcount.a
 	$(CXX) $(CXXFLAGS) examples/merge_example.o libcount.a -o $@ -lcrypto
+
+empirical_data_test: count/empirical_data_test.o libcount.a
+	$(CXX) $(CXXFLAGS) count/empirical_data_test.o libcount.a -o $@
 
 .PHONY:
 examples: c_example cc_example merge_example
@@ -91,8 +94,6 @@ neat: clean
 .PHONY:
 reformat:
 	clang-format -i $(CPPLINT_SOURCES)
-
-# TODO(tdial): Add unit test targets
 
 # Suffix Rules
 .c.o:
