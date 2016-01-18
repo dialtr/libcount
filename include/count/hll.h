@@ -50,7 +50,6 @@ class HLL {
   double RawEstimate() const;
 
   int precision_;
-  uint64_t updates_;
   int register_count_;
   uint8_t* registers_;
 

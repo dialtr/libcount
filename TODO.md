@@ -1,11 +1,16 @@
 ## TODO List
 
-# Must-haves
+# Required
 
-* Add unit tests.
-* Add function to return number of updates to a context.
+* The 'empirical data' unit test currently fails, due to what appears to
+  be a legitimate error in the empirical data that was published as part
+  of the Appendix to the HyperLogLog++ paper by Nunkesser, et al. The
+  bug would result in ambiguity in choosing interpolation indices when
+  calculating the bias correction.
+
+* Provide better unit test coverage.
+
 * Create manpages, add them to install.
-* Address any TODO: items in source.
 
-# Nice to have
+# Optional
 * Document downloading and building OpenSSL for MacOSX

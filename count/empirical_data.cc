@@ -24,7 +24,6 @@ using libcount::HLL_MIN_PRECISION;
 using libcount::HLL_MAX_PRECISION;
 
 double EMP_alpha(int precision) {
-  // TODO(tdial): This could also be a table lookup.
   assert(precision >= HLL_MIN_PRECISION);
   assert(precision <= HLL_MAX_PRECISION);
   switch (precision) {
