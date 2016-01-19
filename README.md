@@ -14,7 +14,7 @@ cardinality is approximately (precision ^ 2) bytes.
 The author of the library is investigating whether there is substantial
 benefit to sparse storage for normal use cases. Since the worst case
 usage is approximately 256Kb, in light of today's typical memory
-configurations, it is not a priority.
+configurations, it is not a priority at this time.
 
 This library has not been thoroughly reviewed or tested at this time.
 
@@ -123,7 +123,7 @@ Please see AUTHORS in the root of the repository for contact information.
 The libcount.a library has no dependencies outside of the standard C/C++
 libraries. Maintaining this property is a design goal.
 
-The examples currently require OpenSSL due to their use of the SHA1
+The examples currently require OpenSSL/crypto due to their use of the SHA1
 hash functions. Future unit tests will also likely require this library.
 
 ## Future Planned Development

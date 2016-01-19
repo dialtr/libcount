@@ -92,9 +92,13 @@ void HLL::Update(uint64_t hash) {
   }
 }
 
-int HLL::Merge(HLL* other) {
-  // Ensure that the precision values of the two objects match.
+int HLL::Merge(const HLL* other) {
   assert(other != NULL);
+  if (other == NULL) {
+    return EINVAL;
+  }
+
+  // Ensure that the precision values of the two objects match.
   if (precision_ != other->precision_) {
     return EINVAL;
   }
@@ -112,9 +116,9 @@ double HLL::RawEstimate() const {
   // Let 'm' be the number of registers.
   const double m = static_cast<double>(register_count_);
 
-  // For each register, let 'max' be the contents of the register
-  // Let 'term' be the reciprocal of 2 ^ max
-  // And let 'sum' be the sum of all terms
+  // For each register, let 'max' be the contents of the register.
+  // Let 'term' be the reciprocal of 2 ^ max.
+  // Finally, let 'sum' be the sum of all terms.
   double sum = 0.0;
   for (int i = 0; i < register_count_; ++i) {
     const double max = static_cast<double>(registers_[i]);

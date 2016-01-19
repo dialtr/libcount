@@ -37,7 +37,7 @@ extern hll_t* HLL_create(int precision, int* opt_error);
 extern void HLL_update(hll_t* ctx, uint64_t hash);
 
 /* Merge 'src' context with 'dest', storing the resulting state in 'dest'. */
-extern int HLL_merge(hll_t* dest, hll_t* src);
+extern int HLL_merge(hll_t* dest, const hll_t* src);
 
 /* Return an estimate of the cardinality of the set, following HyperLogLog++ */
 extern uint64_t HLL_estimate(hll_t* ctx);

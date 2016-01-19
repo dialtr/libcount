@@ -23,9 +23,9 @@ namespace libcount {
 
 class HLL {
  public:
-  virtual ~HLL();
+  ~HLL();
 
-  // Create an instance of a HyperLogLog cardinality estimator. Valid values
+  // Create an instance of a HyperLogLog++ cardinality estimator. Valid values
   // for precision are [4..18] inclusive, and govern the precision of the
   // estimate. Returns NULL on failure. In the event of failure, the caller
   // may provide a pointer-to integer to learn the reason.
@@ -33,14 +33,14 @@ class HLL {
 
   // Update the instance to record the observation of an element. It is
   // assumed that the caller uses a high-quality 64-bit hash function that
-  // is free of biases. Empircally, using a subset of bits from a well-known
+  // is free of biases. Empirically, using a subset of bits from a well-known
   // cryptographic hash function such as SHA1, is a good choice.
   void Update(uint64_t hash);
 
   // Merge count tracking information from other instance into the object.
   // The object being merged in must have been instantiated with the same
   // precision. Returns 0 on success, EINVAL otherwise.
-  int Merge(HLL* other);
+  int Merge(const HLL* other);
 
   // Compute the bias-corrected estimate, following the HyperLogLog++ algorithm.
   uint64_t Estimate() const;

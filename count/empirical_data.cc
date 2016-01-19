@@ -28,7 +28,7 @@ namespace {
 // The empirical bias tables contain varying numbers of entries, depending
 // on the precision level. Unused table entries (occuring at the end of the
 // arrays) are zero filled. This function returns the actual number of
-// valid elements in the array.
+// valid elements in such an array.
 int ValidTableEntries(const double* array, int size) {
   const double EPSILON = 0.0001;
   for (int i = 0; i < size; ++i) {

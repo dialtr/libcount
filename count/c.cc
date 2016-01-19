@@ -56,7 +56,7 @@ void HLL_update(hll_t* ctx, uint64_t hash) {
   ctx->rep->Update(hash);
 }
 
-int HLL_merge(hll_t* dest, hll_t* src) {
+int HLL_merge(hll_t* dest, const hll_t* src) {
   assert(dest != NULL);
   assert(src != NULL);
   return dest->rep->Merge(src->rep);
