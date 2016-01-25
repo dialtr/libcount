@@ -1,4 +1,5 @@
-/* Copyright 2015 The libcount Authors.
+/* 
+   Copyright 2015 The libcount Authors.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -33,13 +34,13 @@ typedef struct hll_t hll_t;
 /* Create a HyperLogLog context object to estimate the cardinality of a set. */
 extern hll_t* HLL_create(int precision, int* opt_error);
 
-/* Update a context to record an element of the set. */
+/* Update a context to record the observation of an element in the set. */
 extern void HLL_update(hll_t* ctx, uint64_t hash);
 
 /* Merge 'src' context with 'dest', storing the resulting state in 'dest'. */
 extern int HLL_merge(hll_t* dest, const hll_t* src);
 
-/* Return an estimate of the cardinality of the set, following HyperLogLog++ */
+/* Return an estimate of the cardinality of the set using HyperLogLog++ */
 extern uint64_t HLL_estimate(hll_t* ctx);
 
 /* Free resources associated with a context. */

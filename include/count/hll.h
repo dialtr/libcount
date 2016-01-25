@@ -28,40 +28,40 @@ class HLL {
   // Create an instance of a HyperLogLog++ cardinality estimator. Valid values
   // for precision are [4..18] inclusive, and govern the precision of the
   // estimate. Returns NULL on failure. In the event of failure, the caller
-  // may provide a pointer-to integer to learn the reason.
+  // may provide a pointer to an integer to learn the reason.
   static HLL* Create(int precision, int* error = 0);
 
   // Update the instance to record the observation of an element. It is
   // assumed that the caller uses a high-quality 64-bit hash function that
-  // is free of biases. Empirically, using a subset of bits from a well-known
+  // is free of bias. Empirically, using a subset of bits from a well-known
   // cryptographic hash function such as SHA1, is a good choice.
   void Update(uint64_t hash);
 
-  // Merge count tracking information from other instance into the object.
+  // Merge count tracking information from another instance into the object.
   // The object being merged in must have been instantiated with the same
   // precision. Returns 0 on success, EINVAL otherwise.
   int Merge(const HLL* other);
 
-  // Compute the bias-corrected estimate, following the HyperLogLog++ algorithm.
+  // Compute the bias-corrected estimate using the HyperLogLog++ algorithm.
   uint64_t Estimate() const;
 
  private:
+  // No copying allowed
+  HLL(const HLL& no_copy);
+  HLL& operator=(const HLL& no_assign);
+
+  // Constructor is private: we validate the precision in the Create function.
+  explicit HLL(int precision);
+
   // Compute the raw estimate based on the HyperLogLog algorithm.
   double RawEstimate() const;
-
-  int precision_;
-  int register_count_;
-  uint8_t* registers_;
-
-  // Constructor private: we vet out the precision in the Create function.
-  explicit HLL(int precision);
 
   // Return the number of registers equal to zero; used in LinearCounting.
   int RegistersEqualToZero() const;
 
-  // No copying allowed
-  HLL(const HLL& no_copy);
-  HLL& operator=(const HLL& no_assign);
+  int precision_;
+  int register_count_;
+  uint8_t* registers_;
 };
 
 }  // namespace libcount
