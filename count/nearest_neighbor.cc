@@ -49,12 +49,13 @@ class CompareNeighbors {
 size_t NearestNeighbors(const double* array, size_t array_length,
                         const double probe_value, size_t N,
                         size_t* neighbor_indices) {
-  // Use an ordered set to track the neighbors will smallest distance
+  // Use an ordered set to track the neighbors with smallest distance
   // from the probe value.
   std::set<Neighbor, CompareNeighbors> neighbors;
 
   // Scan the input array for potential closest neighbors. The set
-  // remains ordered from nearest neighbor to farthest neighbor.
+  // remains ordered from farthest neighbor to nearest neighbor to
+  // make it simple to trim far neighbors while processing.
   for (size_t i = 0; i < array_length; ++i) {
     // Insert a candidate neighbor into the reverse-sorted set.
     Neighbor n(i, fabs(array[i] - probe_value));
