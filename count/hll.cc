@@ -138,6 +138,11 @@ double HLL::RawEstimate() const {
 }
 
 uint64_t HLL::Estimate() const {
+  // TODO(tdial): The logic below was more or less copied from the research
+  // paper, less the handling of the sparse register array, which is not
+  // implemented at this time. It is correct, but seems a little awkward.
+  // Have someone else review this.
+
   // First, calculate the raw estimate per original HyperLogLog.
   const double E = RawEstimate();
 
