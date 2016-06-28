@@ -56,7 +56,7 @@ double EMP_alpha(int precision) {
     case 6:
       return 0.709;
     default:
-      return (0.7213 / (1.0 + (1.079 / static_cast<double>(precision))));
+      return (0.7213 / (1.0 + (1.079 / static_cast<double>(1 << precision))));
   }
 }
 
