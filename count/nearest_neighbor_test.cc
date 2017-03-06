@@ -13,9 +13,9 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#include <stdlib.h>
-#include <stdio.h>
 #include "count/nearest_neighbor.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 using libcount::NearestNeighbors;
 

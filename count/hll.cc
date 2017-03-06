@@ -131,7 +131,7 @@ double HLL::RawEstimate() const {
   assert(harmonic_mean >= 0.0);
 
   // The harmonic mean is scaled by a constant that depends on the precision.
-  const double estimate = EMP_alpha(precision_) * m * harmonic_mean;
+  const double estimate = EmpiricalAlpha(precision_) * m * harmonic_mean;
   assert(estimate >= 0.0);
 
   return estimate;
@@ -150,7 +150,8 @@ uint64_t HLL::Estimate() const {
   const double BiasThreshold = 5 * register_count_;
 
   // Calculate E', the bias corrected estimate.
-  const double EP = (E < BiasThreshold) ? (E - EMP_bias(E, precision_)) : E;
+  const double EP =
+      (E < BiasThreshold) ? (E - EmpiricalBias(E, precision_)) : E;
 
   // The number of zeroed registers decides whether we use LinearCounting.
   const int V = RegistersEqualToZero();
@@ -164,7 +165,7 @@ uint64_t HLL::Estimate() const {
   }
 
   // Under an empirically-determined threshold we return H, otherwise E'.
-  if (H < EMP_threshold(precision_)) {
+  if (H < EmpiricalThreshold(precision_)) {
     return H;
   } else {
     return EP;
