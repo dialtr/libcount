@@ -20,12 +20,10 @@
 #include <algorithm>
 #include <vector>
 #include "count/hll_limits.h"
-#include "count/nearest_neighbor.h"
 #include "count/utility.h"
 
 using libcount::HLL_MIN_PRECISION;
 using libcount::HLL_MAX_PRECISION;
-using libcount::NearestNeighbors;
 
 double EmpiricalAlpha(int precision) {
   assert(precision >= HLL_MIN_PRECISION);
@@ -69,34 +67,66 @@ double EmpiricalBias(double raw_estimate, int precision) {
   // There up to 201 data points in each table of raw estimates, but the
   // number of points varies depending on the precision. Determine the
   // actual number of valid entries in the table.
-  const int NUM_ENTRIES = ValidTableEntries(estimates, 201);
+  const int kNumValidEntries = ValidTableEntries(estimates, 201);
 
-  // Find the indices of the two closest raw estimates in the table using
-  // nearest neighbor.
-  size_t neighbors[2] = {0};
-  const size_t neighbor_count =
-      NearestNeighbors(estimates, NUM_ENTRIES, raw_estimate, 2, neighbors);
-  assert(neighbor_count == 2);
+  // The raw estimate tables are sorted in ascending order. Search for the
+  // pair of values in the table that straddle the input, 'raw_estimate'. We
+  // do this by searching (linearly) for the first value in the estimate
+  // table that is greater than 'raw_estimate'. We consider this to be the
+  // "right-hand-side" of the pair that straddle.
+  int rhs = 0;
+  for (; rhs < kNumValidEntries; ++rhs) {
+    if (estimates[rhs] > raw_estimate) {
+      break;
+    }
+  }
 
-  // Use linear interpolation to find a bias value based on the two
-  // nearest neighbors found above.
+  // Two boundary cases exist: if we exit the loop above and rhs is equal to
+  // zero OR kNumValidEntries, then we'll return the first OR last element
+  // of the bias table, respectively.
+  if (rhs == 0) {
+    return biases[0];
+  } else if (rhs == kNumValidEntries) {
+    return biases[kNumValidEntries - 1];
+  }
 
-  // Get values of left, right nearest neighbors
-  const double left_neighbor = estimates[neighbors[0]];
-  const double right_neighbor = estimates[neighbors[1]];
+  // Use linear interpolation to find a bias value.
 
-  // Compute range (difference between neighbors) and scale factor.
+  // Get values of left, right straddling table entries.
+  const double left_neighbor = estimates[rhs - 1];
+  const double right_neighbor = estimates[rhs];
+
+  // Compute range (difference between entries) and scale factor.
   const double range = right_neighbor - left_neighbor;
   const double scale = (raw_estimate - left_neighbor) / range;
 
   // Get values of corresponding left, right bias values.
-  const double left_bias = biases[neighbors[0]];
-  const double right_bias = biases[neighbors[1]];
+  const double left_bias = biases[rhs - 1];
+  const double right_bias = biases[rhs];
 
   // Compute range of bias values and find interpolated value using
   // the scale factor computed above.
   const double bias_range = right_bias - left_bias;
   const double interpolated_bias = (scale * bias_range) + left_bias;
+
+  // Sanity Check the interpolated bias. We assert in debug mode, and abort
+  // in release mode. This seems extreme, but recognize that if the value
+  // we interpolated above does not lie between the left, right entries in
+  // the bias table that this reflects a programmer error in the above
+  // code that intends to interpolate a value.
+  if (left_bias < right_bias) {
+    assert(interpolated_bias >= left_bias);
+    assert(interpolated_bias <= right_bias);
+    if ((interpolated_bias < left_bias) || (interpolated_bias > right_bias)) {
+      abort();
+    }
+  } else {
+    assert(interpolated_bias <= left_bias);
+    assert(interpolated_bias >= right_bias);
+    if ((interpolated_bias > left_bias) || (interpolated_bias < right_bias)) {
+      abort();
+    }
+  }
 
   return interpolated_bias;
 }
