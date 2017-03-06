@@ -23,24 +23,6 @@
 #include "count/nearest_neighbor.h"
 #include "count/utility.h"
 
-namespace {
-
-// The empirical bias tables contain varying numbers of entries, depending
-// on the precision level. Unused table entries (occuring at the end of the
-// arrays) are zero filled. This function returns the actual number of
-// valid elements in such an array.
-int ValidTableEntries(const double* array, int size) {
-  const double EPSILON = 0.0001;
-  for (int i = 0; i < size; ++i) {
-    if (libcount::IsDoubleEqual(array[i], 0.0, EPSILON)) {
-      return i;
-    }
-  }
-  return size;
-}
-
-}  // namespace
-
 using libcount::HLL_MIN_PRECISION;
 using libcount::HLL_MAX_PRECISION;
 using libcount::NearestNeighbors;
@@ -117,6 +99,20 @@ double EmpiricalBias(double raw_estimate, int precision) {
   const double interpolated_bias = (scale * bias_range) + left_bias;
 
   return interpolated_bias;
+}
+
+// The empirical bias tables contain varying numbers of entries, depending
+// on the precision level. Unused table entries (occuring at the end of the
+// arrays) are zero filled. This function returns the actual number of
+// valid elements in such an array.
+int ValidTableEntries(const double* array, int size) {
+  const double EPSILON = 0.0001;
+  for (int i = 0; i < size; ++i) {
+    if (libcount::IsDoubleEqual(array[i], 0.0, EPSILON)) {
+      return i;
+    }
+  }
+  return size;
 }
 
 /* Table Data Below */
