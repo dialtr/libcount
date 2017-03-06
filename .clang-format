@@ -1,7 +1,7 @@
 # We'll start with the Google standard, ensuring that we stay with an
 # indent width of 2, column limit of 80.
 BasedOnStyle: Google
-#Language: Cpp
+Language: Cpp
 IndentWidth: 2
 ColumnLimit: 80
 
