@@ -31,6 +31,14 @@ This library is currently in ALPHA.
     make
     sudo make install
 
+## Certification
+
+You can run a test suite that runs several simulations at every precision
+value to certify that libcount is doing a reasonable job estimating the
+cardinality of sets. Just:
+
+    make certify
+
 ## Minimal Examples
 
 Below are two minimal examples that demonstrate using the C++ and C APIs,
