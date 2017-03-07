@@ -13,21 +13,18 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef COUNT_NEAREST_NEIGHBOR_H_
-#define COUNT_NEAREST_NEIGHBOR_H_
+#ifndef INCLUDE_COUNT_HLL_DATA_H_
+#define INCLUDE_COUNT_HLL_DATA_H_
 
-#include <stdlib.h>
+// Array of threshold values at each precision value.
+extern const double THRESHOLD_DATA[15];
 
-namespace libcount {
+// Two dimensional array containing estimate data at each precision level.
+extern const double ESTIMATE_DATA[15][201];
 
-// Scan an array of doubles, populating the 'neighbor_indices' array with
-// at most N array indices of values closest in value to the probe value.
-// Returns the actual number of neighbors found, which may be smaller than
-// N if 'array_length' is smaller than N.
-size_t NearestNeighbors(const double* array, size_t array_length,
-                        const double probe_value, size_t N,
-                        size_t* neighbor_indices);
+// Two dimensional array containing bias for each estimate at each precision
+// level. The indices into this array correspond 1:1 to the indices fof the
+// data in ESTIMATE_DATA.
+extern const double BIAS_DATA[15][201];
 
-}  // namespace libcount
-
-#endif  // COUNT_NEAREST_NEIGHBOR
+#endif  // INCLUDE_COUNT_HLL_DATA_H_

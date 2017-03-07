@@ -43,7 +43,8 @@ To build the examples, simply:
 
 They are not built by default because they depend on the OpenSSL libraries
 being available on the system, and since those libraries are not installed
-by default on many systems, building them is "opt-in." 
+by default on many systems, building them is "opt-in." On Ubuntu, the SSL
+package required is: 'libssl-dev'.
 
 ### C++
 ```C++
