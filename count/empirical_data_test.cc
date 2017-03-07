@@ -13,15 +13,13 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
+#include "count/empirical_data.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "count/empirical_data.h"
 #include "count/hll_limits.h"
 
 using libcount::HLL_MIN_PRECISION;
 using libcount::HLL_MAX_PRECISION;
 
-int main(int argc, char* argv[]) {
-  return 0;
-}
+int main(int argc, char* argv[]) { return 0; }
