@@ -17,17 +17,21 @@
 #include <errno.h>
 #include <inttypes.h>
 #include <openssl/sha.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include "count/hll.h"
 #include "count/hll_limits.h"
 
-using libcount::HLL;
-using libcount::HLL_MIN_PRECISION;
-using libcount::HLL_MAX_PRECISION;
+using std::cerr;
 using std::cout;
 using std::endl;
 
+using libcount::HLL;
+using libcount::HLL_MIN_PRECISION;
+using libcount::HLL_MAX_PRECISION;
+
+// Hash function that hashes an integer to uint64_t, using 64 bits of SHA-1.
 uint64_t hash(int i) {
   // Structure that is 160 bits wide used to extract 64 bits from a SHA-1.
   struct hashval {
@@ -52,6 +56,17 @@ struct TestResults {
   uint64_t estimate;
   double percent_error;
 };
+
+std::ostream& operator<<(std::ostream& os, const TestResults& results) {
+  char buffer[1000];
+  sprintf(buffer,
+          "Precision:%2d  Size:%8lu  Actual:%8lu  Estimate:%8lu,  Error: "
+          "%7.2lf %%",
+          results.precision, results.size, results.cardinality,
+          results.estimate, results.percent_error);
+  os << buffer;
+  return os;
+}
 
 int certify(int precision, uint64_t size, uint64_t cardinality,
             TestResults* results) {
@@ -102,8 +117,23 @@ int certify(int precision, uint64_t size, uint64_t cardinality,
 }
 
 int main(int argc, char* argv[]) {
+  const int kMaxCardinality = 1000000;
+  const int kMaxSize = kMaxCardinality * 10;
+  size_t tests = 0;
+  // For every precision level...
   for (int p = HLL_MIN_PRECISION; p <= HLL_MAX_PRECISION; ++p) {
-    (void)p;
+    for (int c = 1; c <= kMaxCardinality; c *= 10) {
+      for (int s = c; s <= kMaxSize; s *= 10) {
+        TestResults results;
+        int status = certify(p, s, c, &results);
+        if (status < 0) {
+          cerr << "certify: the certify() function returned an error" << endl;
+          exit(EXIT_FAILURE);
+        }
+        cout << results << endl;
+        ++tests;
+      }
+    }
   }
-  return 0;
+  return EXIT_SUCCESS;
 }
