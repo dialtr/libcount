@@ -59,11 +59,11 @@ struct TestResults {
 
 std::ostream& operator<<(std::ostream& os, const TestResults& results) {
   char buffer[1000];
-  sprintf(buffer,
-          "Precision:%2d  Size:%8lu  Actual:%8lu  Estimate:%8lu,  Error: "
-          "%7.2lf %%",
-          results.precision, results.size, results.cardinality,
-          results.estimate, results.percent_error);
+  snprintf(buffer, sizeof(buffer),
+           "Precision:%2d  Size:%8lu  Actual:%8lu  Estimate:%8lu,  Error: "
+           "%7.2lf %%",
+           results.precision, results.size, results.cardinality,
+           results.estimate, results.percent_error);
   os << buffer;
   return os;
 }
