@@ -24,21 +24,21 @@
 // monotonically with their associated array indices.
 
 extern const double THRESHOLD_DATA[15] = {
-  10,     // Precision  4
-  20,     // Precision  5
-  40,     // Precision  6
-  80,     // Precision  7
-  220,    // Precision  8
-  400,    // Precision  9
-  900,    // Precision 10
-  1800,   // Precision 11
-  3100,   // Precision 12
-  6500,   // Precision 13
-  11500,  // Precision 14
-  20000,  // Precision 15
-  50000,  // Precision 16
-  120000, // Precision 17
-  350000  // Precision 18
+    10,      // Precision  4
+    20,      // Precision  5
+    40,      // Precision  6
+    80,      // Precision  7
+    220,     // Precision  8
+    400,     // Precision  9
+    900,     // Precision 10
+    1800,    // Precision 11
+    3100,    // Precision 12
+    6500,    // Precision 13
+    11500,   // Precision 14
+    20000,   // Precision 15
+    50000,   // Precision 16
+    120000,  // Precision 17
+    350000   // Precision 18
 };
 
 extern const double ESTIMATE_DATA[15][201] = {
