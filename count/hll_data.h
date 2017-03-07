@@ -16,6 +16,9 @@
 #ifndef INCLUDE_COUNT_HLL_DATA_H_
 #define INCLUDE_COUNT_HLL_DATA_H_
 
+// Array of threshold values at each precision value.
+extern const double THRESHOLD_DATA[15];
+
 // Two dimensional array containing estimate data at each precision level.
 extern const double ESTIMATE_DATA[15][201];
 
@@ -23,6 +26,7 @@ extern const double ESTIMATE_DATA[15][201];
 // level. The indices into this array correspond 1:1 to the indices fof the
 // data in ESTIMATE_DATA.
 extern const double BIAS_DATA[15][201];
+
 
 #endif  // INCLUDE_COUNT_HLL_DATA_H_
 
