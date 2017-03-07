@@ -16,20 +16,24 @@
 #ifndef COUNT_EMPIRICAL_DATA_H_
 #define COUNT_EMPIRICAL_DATA_H_
 
+namespace libcount {
+
 // Return the empirical alpha value used for scaling harmonic means.
-extern double EmpiricalAlpha(int precision);
+double EmpiricalAlpha(int precision);
 
 // Return the cardinality threshold for the given precision value.
 // Valid values for precision are [4..18] inclusive.
-extern double EmpiricalThreshold(int precision);
+double EmpiricalThreshold(int precision);
 
 // Return the empirical bias value for the raw estimate and precision.
-extern double EmpiricalBias(double raw_estimate, int precision);
+double EmpiricalBias(double raw_estimate, int precision);
 
 // Scan the array to determine the number of valid entries; The assumption
 // is made that a value of zero marks the last entry. This is used internally
 // by the implementation of the interpolation routine and is exposed so that
 // it can be tested properly.
 int ValidTableEntries(const double *array, int max_size);
+
+}  // namespace libcount
 
 #endif  // COUNT_EMPIRICAL_DATA_H_

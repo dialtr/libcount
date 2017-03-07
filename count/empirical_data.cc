@@ -23,8 +23,7 @@
 #include "count/hll_limits.h"
 #include "count/utility.h"
 
-using libcount::HLL_MIN_PRECISION;
-using libcount::HLL_MAX_PRECISION;
+namespace libcount {
 
 double EmpiricalAlpha(int precision) {
   assert(precision >= HLL_MIN_PRECISION);
@@ -68,7 +67,8 @@ double EmpiricalBias(double raw_estimate, int precision) {
   // There up to 201 data points in each table of raw estimates, but the
   // number of points varies depending on the precision. Determine the
   // actual number of valid entries in the table.
-  const int kNumValidEntries = ValidTableEntries(estimates, 201);
+  const int kMaxEntries = 201;
+  const int kNumValidEntries = ValidTableEntries(estimates, kMaxEntries);
 
   // The raw estimate tables are sorted in ascending order. Search for the
   // pair of values in the table that straddle the input, 'raw_estimate'. We
@@ -145,3 +145,5 @@ int ValidTableEntries(const double* array, int size) {
   }
   return size;
 }
+
+}  // namespace libcount
