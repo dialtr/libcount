@@ -27,6 +27,4 @@ extern const double ESTIMATE_DATA[15][201];
 // data in ESTIMATE_DATA.
 extern const double BIAS_DATA[15][201];
 
-
 #endif  // INCLUDE_COUNT_HLL_DATA_H_
-

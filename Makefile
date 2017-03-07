@@ -17,10 +17,10 @@
 # to switch between compilation modes.
 
 # A: Production use (full optimizations)
-OPT ?= -O3 -DNDEBUG
+#OPT ?= -O3 -DNDEBUG
 
 # B: Debug mode, with full line-level debugging symbols
-#OPT ?= -g2
+OPT ?= -g2
 
 # C: Profiling mode: optimizations, but w/debugging symbols
 #OPT ?= -O3 -g2 -DNDEBUG

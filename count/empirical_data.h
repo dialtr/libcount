@@ -16,10 +16,6 @@
 #ifndef COUNT_EMPIRICAL_DATA_H_
 #define COUNT_EMPIRICAL_DATA_H_
 
-extern const double THRESHOLD_DATA[19];
-extern const double RAW_ESTIMATE_DATA[15][201];
-extern const double BIAS_DATA[15][201];
-
 // Return the empirical alpha value used for scaling harmonic means.
 extern double EmpiricalAlpha(int precision);
 
