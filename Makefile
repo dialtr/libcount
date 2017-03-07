@@ -60,6 +60,10 @@ c_example: examples/c_example.o libcount.a
 cc_example: examples/cc_example.o libcount.a
 	$(CXX) $(CXXFLAGS) examples/cc_example.o libcount.a -o $@ -lcrypto
 
+certify: examples/certify.o libcount.a
+	$(CXX) $(CXXFLAGS) examples/certify.o libcount.a -o $@ -lcrypto
+	./certify
+
 empirical_data_test: count/empirical_data_test.o libcount.a
 	$(CXX) $(CXXFLAGS) count/empirical_data_test.o libcount.a -o $@
 
