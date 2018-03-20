@@ -1,5 +1,4 @@
 # libcount
-##########
 
 The goal of libcount is to provide a complete C/C++ implementation of the
 HyperLogLog++ cardinality estimation algorithm, as described in the paper:
