@@ -14,12 +14,15 @@
 // contributors.
 
 #include "count/hll.h"
+
 #include <assert.h>
 #include <errno.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <algorithm>
+
 #include "count/empirical_data.h"
 #include "count/utility.h"
 

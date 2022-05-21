@@ -1,4 +1,4 @@
-# Copyright 2015 The libcount Authors.
+# Copyright 2015-2022 The libcount Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ TESTS = empirical_data_test
 all: libcount.a
 
 .PHONY:
-check: $(TESTS)
+tests: $(TESTS)
 	for t in $(TESTS); do echo "** Running $$t"; ./$$t || exit 1; done
 
 .PHONY:
@@ -60,9 +60,9 @@ c_example: examples/c_example.o libcount.a
 cc_example: examples/cc_example.o libcount.a
 	$(CXX) $(CXXFLAGS) examples/cc_example.o libcount.a -o $@ -lcrypto
 
-certify: examples/certify.o libcount.a
-	$(CXX) $(CXXFLAGS) examples/certify.o libcount.a -o $@ -lcrypto
-	./certify
+check: examples/check.o libcount.a
+	$(CXX) $(CXXFLAGS) examples/check.o libcount.a -o $@ -lcrypto
+	./check
 
 empirical_data_test: count/empirical_data_test.o libcount.a
 	$(CXX) $(CXXFLAGS) count/empirical_data_test.o libcount.a -o $@

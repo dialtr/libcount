@@ -14,6 +14,7 @@
 // contributors.
 
 #include "count/utility.h"
+
 #include <math.h>
 
 namespace libcount {

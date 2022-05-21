@@ -30,13 +30,20 @@ This library is currently in ALPHA.
     make
     sudo make install
 
-## Certification
+## Testing
 
-You can run a test suite that runs several simulations at every precision
+At the present time, **libcount** doesn't have a significant number of unit
+tests. This will be rectified in a forthcoming version. At present, there
+is one unit test that validates the empirical data table used internally.
+To run this test, simply type:
+
+    make tests
+
+You can also run a suite that runs several simulations at every precision
 value to certify that libcount is doing a reasonable job estimating the
-cardinality of sets. Just:
+cardinality of sets. Just type:
 
-    make certify
+    make check
 
 ## Minimal Examples
 

@@ -15,7 +15,9 @@
 
 #include <inttypes.h>
 #include <openssl/sha.h>
+
 #include <iostream>
+
 #include "count/hll.h"
 
 using libcount::HLL;
