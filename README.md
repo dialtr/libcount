@@ -30,11 +30,18 @@ This library is currently in ALPHA.
     make
     sudo make install
 
-## Certification
+## Testing
 
-You can run a test suite that runs several simulations at every precision
+At the present time, **libcount** doesn't have a significant number of unit
+tests. This will be rectified in a forthcoming version. At present, there
+is one unit test that validates the empirical data table used internally.
+To run this test, simply type:
+
+    make check
+
+You can also run a suite that runs several simulations at every precision
 value to certify that libcount is doing a reasonable job estimating the
-cardinality of sets. Just:
+cardinality of sets. Just type:
 
     make certify
 
@@ -127,6 +134,11 @@ int main(int argc, char* argv[]) {
 ## Contact
 Please see AUTHORS in the root of the repository for contact information.
 
+## Contributing
+I would enjoy working with people who may be interested in contributing. I am
+also interested in learning how the library is being used and whether any
+other features may be desirable.
+
 ## Dependencies
 The libcount.a library has no dependencies outside of the standard C/C++
 libraries. Maintaining this property is a design goal.
@@ -135,5 +147,7 @@ The examples currently require OpenSSL/crypto due to their use of the SHA1
 hash functions. Future unit tests will also likely require this library.
 
 ## Future Planned Development
-
+* Additional tests
+* Rethink the interface(s) for Version 2
+* Examine whether changes are needed or desirable for modern C++.
 * Sparse "register" storage

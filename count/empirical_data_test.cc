@@ -1,4 +1,4 @@
-// Copyright 2015 The libcount Authors.
+// Copyright 2015-2022 The libcount Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,14 +14,16 @@
 // contributors.
 
 #include "count/empirical_data.h"
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "count/hll_data.h"
 #include "count/hll_limits.h"
 
-using libcount::HLL_MIN_PRECISION;
 using libcount::HLL_MAX_PRECISION;
+using libcount::HLL_MIN_PRECISION;
 using libcount::ValidTableEntries;
 
 // Ensure that the empirical data set is sorted properly.

@@ -1,4 +1,4 @@
-// Copyright 2015 The libcount Authors.
+// Copyright 2015-2022 The libcount Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,9 @@
 #include <openssl/sha.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <iostream>
+
 #include "count/hll.h"
 #include "count/hll_limits.h"
 
@@ -28,8 +30,8 @@ using std::cout;
 using std::endl;
 
 using libcount::HLL;
-using libcount::HLL_MIN_PRECISION;
 using libcount::HLL_MAX_PRECISION;
+using libcount::HLL_MIN_PRECISION;
 
 // Hash function that hashes an integer to uint64_t, using 64 bits of SHA-1.
 uint64_t hash(int i) {

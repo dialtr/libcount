@@ -1,4 +1,4 @@
-// Copyright 2015 The libcount Authors.
+// Copyright 2015-2022 The libcount Authors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,12 +14,15 @@
 // contributors.
 
 #include "count/hll.h"
+
 #include <assert.h>
 #include <errno.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <algorithm>
+
 #include "count/empirical_data.h"
 #include "count/utility.h"
 

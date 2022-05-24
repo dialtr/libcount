@@ -4,7 +4,7 @@ build_config.mk
 # Ignore build targets
 c_example
 cc_example
-certify
+check
 libcount.a
 merge_example
 *_test

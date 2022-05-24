@@ -1,4 +1,4 @@
-/* Copyright 2015 The libcount Authors.
+/* Copyright 2015-2022 The libcount Authors.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
 */
 
 #include "count/c.h"
+
 #include <assert.h>
 #include <stdlib.h>
+
 #include "count/hll.h"
 
 #ifdef __cplusplus
