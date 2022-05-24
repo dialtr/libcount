@@ -40,7 +40,7 @@ To run this test, simply type:
     make tests
 
 You can also run a suite that runs several simulations at every precision
-value to certify that libcount is doing a reasonable job estimating the
+value to check that libcount is doing a reasonable job estimating the
 cardinality of sets. Just type:
 
     make check
