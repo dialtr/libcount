@@ -13,7 +13,27 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef INCLUDE_COUNT_LICENSE_TEMPLATE_H_
-#define INCLUDE_COUNT_LICENSE_TEMPLATE_H_
+#include "count/counter.h"
 
-#endif  // INCLUDE_COUNT_LICENSE_TEMPLATE_H_
+namespace libcount {
+
+Counter::Counter(int precision) : precision_(0) {
+	if (precision < kMinPrecision) {
+		precision_ = kMinPrecision;
+	} else if (precision > kMaxPrecision) {
+		precision_ = kMaxPrecision;
+	} else {
+		precision_ = precision;
+	}
+}
+
+Counter::~Counter() {
+	// TODO(tdial): Implement
+}
+
+int Counter::Precision() const {
+	return precision_;
+}
+
+}  // namespace libcount
+

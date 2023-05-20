@@ -6,6 +6,7 @@ c_example
 cc_example
 check
 libcount.a
+libcount_tests
 merge_example
 *_test
 

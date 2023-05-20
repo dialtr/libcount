@@ -1,4 +1,4 @@
-# Copyright 2015-2022 The libcount Authors.
+# Copyright 2015-2023 The libcount Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,6 +30,9 @@ PREFIX ?= /usr/local
 # Warning Flags
 WARNINGFLAGS = -Wall -Werror
 
+# C++ Compiler Version Flags
+CPPVERFLAGS = -std=c++17
+
 # Detect what platform we're building on
 $(shell CXX="$(CXX)" TARGET_OS="$(TARGET_OS)" \
 	./build_config build_config.mk .)
@@ -39,9 +42,9 @@ include build_config.mk
 
 AR = ar
 RANLIB = ranlib
-CXXFLAGS += -I. -I./include $(PLATFORM_CXXFLAGS) $(OPT) $(WARNINGFLAGS)
+CXXFLAGS += -I. -I./include $(PLATFORM_CXXFLAGS) $(OPT) $(WARNINGFLAGS) $(CPPVERFLAGS)
 COUNT_OBJECTS = $(COUNT_FILES:.cc=.o)
-TESTS = empirical_data_test
+TESTS = empirical_data_test libcount_tests
 
 # Targets
 all: libcount.a
@@ -66,6 +69,9 @@ certify: examples/certify.o libcount.a
 
 empirical_data_test: count/empirical_data_test.o libcount.a
 	$(CXX) $(CXXFLAGS) count/empirical_data_test.o libcount.a -o $@
+
+libcount_tests: count/libcount_tests_main.o count/counter_tests.o libcount.a
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 merge_example: examples/merge_example.o libcount.a
 	$(CXX) $(CXXFLAGS) examples/merge_example.o libcount.a -o $@ -lcrypto

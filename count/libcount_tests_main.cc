@@ -13,7 +13,5 @@
 // limitations under the License. See the AUTHORS file for names of
 // contributors.
 
-#ifndef INCLUDE_COUNT_LICENSE_TEMPLATE_H_
-#define INCLUDE_COUNT_LICENSE_TEMPLATE_H_
-
-#endif  // INCLUDE_COUNT_LICENSE_TEMPLATE_H_
+#define CATCH_CONFIG_MAIN
+#include <catch/catch.hpp>
